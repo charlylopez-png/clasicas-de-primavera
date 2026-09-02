@@ -1,0 +1,91 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #f7f3e8;
+  --surface: #efe8d5;
+  --surface-2: #e3dcc8;
+  --text: #1c2420;
+  --text-soft: #5c665a;
+  --line: #ddd5bf;
+  --accent-verde: #2f7a52;
+  --accent-verde-deep: #163826;
+  --accent-amarillo: #c68a06;
+  --accent-rosa: #c53f74;
+  --hero-bg-1: #163826;
+  --hero-bg-2: #2f7a52;
+  --hero-text: #f7f3e8;
+  --pill-bg: rgba(22, 56, 38, 0.07);
+  --pill-text: #163826;
+  --shadow: rgba(22, 40, 30, 0.1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #101c16;
+    --surface: #16251c;
+    --surface-2: #1e3227;
+    --text: #edf1e9;
+    --text-soft: #a3b1a1;
+    --line: #28392e;
+    --accent-verde: #63c592;
+    --accent-verde-deep: #9fe0bc;
+    --accent-amarillo: #f0c23a;
+    --accent-rosa: #f28fb0;
+    --hero-bg-1: #0b1712;
+    --hero-bg-2: #1b3a28;
+    --hero-text: #f3efdf;
+    --pill-bg: rgba(159, 224, 188, 0.12);
+    --pill-text: #cfe9db;
+    --shadow: rgba(0, 0, 0, 0.45);
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #101c16;
+  --surface: #16251c;
+  --surface-2: #1e3227;
+  --text: #edf1e9;
+  --text-soft: #a3b1a1;
+  --line: #28392e;
+  --accent-verde: #63c592;
+  --accent-verde-deep: #9fe0bc;
+  --accent-amarillo: #f0c23a;
+  --accent-rosa: #f28fb0;
+  --hero-bg-1: #0b1712;
+  --hero-bg-2: #1b3a28;
+  --hero-text: #f3efdf;
+  --pill-bg: rgba(159, 224, 188, 0.12);
+  --pill-text: #cfe9db;
+  --shadow: rgba(0, 0, 0, 0.45);
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-text: var(--text);
+  --color-text-soft: var(--text-soft);
+  --color-line: var(--line);
+  --color-verde: var(--accent-verde);
+  --color-verde-deep: var(--accent-verde-deep);
+  --color-amarillo: var(--accent-amarillo);
+  --color-rosa: var(--accent-rosa);
+  --font-display: var(--font-oswald);
+  --font-body: var(--font-karla);
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body), sans-serif;
+}
+
+h1,
+h2,
+h3,
+.font-display {
+  font-family: var(--font-display), sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  text-wrap: balance;
+}
