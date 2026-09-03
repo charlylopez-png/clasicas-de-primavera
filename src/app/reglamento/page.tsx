@@ -9,7 +9,7 @@ export default function ReglamentoPage() {
       </p>
 
       <div className="mt-8 grid gap-4 sm:grid-cols-3">
-        <RuleCard n="01" title="Multiplicadores" accent="verde">
+        <RuleCard n="01" title="Coeficientes" accent="verde">
           Carreras y corredores puntúan distinto según su categoría. Un
           favorito ganando una carrera menor vale bastante menos que una
           sorpresa triunfando en un Monumento.
@@ -35,8 +35,8 @@ export default function ReglamentoPage() {
         </h2>
         <div className="mt-3 rounded-xl border border-dashed border-white/35 bg-white/5 p-4 text-center font-display text-base">
           Puntos por puesto <span className="text-amarillo">×</span>{" "}
-          Multiplicador de la carrera <span className="text-amarillo">×</span>{" "}
-          Multiplicador del corredor
+          Coeficiente de la carrera <span className="text-amarillo">×</span>{" "}
+          Coeficiente del corredor
         </div>
         <div className="mt-3 grid gap-3 sm:grid-cols-2">
           <Example title="Favorito claro">
@@ -54,7 +54,7 @@ export default function ReglamentoPage() {
         <Kicker>Puntuación base</Kicker>
         <h2 className="text-xl text-verde-deep">Puntos por puesto</h2>
         <p className="mt-2 max-w-prose text-sm text-text-soft">
-          Puntuación de partida antes de aplicar los multiplicadores.
+          Puntuación de partida antes de aplicar los coeficientes.
           Puntúan los 20 primeros.
         </p>
         <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">

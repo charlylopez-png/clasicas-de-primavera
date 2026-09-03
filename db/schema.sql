@@ -72,7 +72,7 @@ create index if not exists idx_team_last_draft_race on team_last_draft (race_id)
 create index if not exists idx_race_results_race on race_results (race_id);
 create index if not exists idx_sprint_pairings_race on sprint_pairings (race_id);
 
--- Calendario de las 12 clásicas (orden, estrellas, multiplicador y logo).
+-- Calendario de las 12 clásicas (orden, estrellas, coeficiente y logo).
 insert into races (order_num, name, stars, multiplier, logo_path) values
   (1, 'Omloop Het Nieuwsblad', 3, 1.5, '/logos/01-omloop-het-nieuwsblad.jpg'),
   (2, 'Strade Bianche', 4, 1.75, '/logos/02-strade-bianche.png'),

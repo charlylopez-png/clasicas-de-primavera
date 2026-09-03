@@ -34,7 +34,7 @@ export default function CalendarioPage() {
       <h1 className="text-2xl text-verde-deep">Las 12 clásicas</h1>
       <p className="mt-2 max-w-prose text-sm text-text-soft">
         De finales de febrero a finales de abril, con su categoría y el
-        multiplicador que aporta a la puntuación.
+        coeficiente que aporta a la puntuación.
       </p>
 
       <div className="mt-6 grid gap-3 sm:grid-cols-2">
