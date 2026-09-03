@@ -3,7 +3,7 @@ import { jwtVerify } from "jose";
 import { SESSION_COOKIE } from "@/lib/auth";
 
 // Routes that require an authenticated session at all.
-const PROTECTED_PREFIXES = ["/mi-equipo", "/clasificacion", "/admin", "/pendiente"];
+const PROTECTED_PREFIXES = ["/mi-equipo", "/clasificacion", "/admin", "/pendiente", "/corredores"];
 const ADMIN_PREFIX = "/admin";
 const PUBLIC_AUTH_PATHS = ["/login", "/signup"];
 
@@ -66,6 +66,7 @@ export const config = {
     "/clasificacion/:path*",
     "/admin/:path*",
     "/pendiente/:path*",
+    "/corredores/:path*",
     "/login",
     "/signup",
   ],

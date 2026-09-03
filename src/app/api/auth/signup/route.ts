@@ -52,6 +52,7 @@ export async function POST(request: Request) {
     displayName: user.display_name,
     role: user.role,
     status: user.status,
+    sanedrin: false,
   });
 
   return NextResponse.json({ ok: true, status: user.status });

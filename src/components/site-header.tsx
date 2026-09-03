@@ -21,6 +21,9 @@ export default function SiteHeader({
       { href: "/clasificacion", label: "Clasificación" }
     );
   }
+  if (session?.role === "admin" || session?.sanedrin) {
+    navItems.push({ href: "/corredores", label: "Corredores" });
+  }
   if (session?.role === "admin") {
     navItems.push({ href: "/admin", label: "Admin" });
   }

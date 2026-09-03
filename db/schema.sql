@@ -11,14 +11,19 @@ create table if not exists users (
   display_name text not null,
   role text not null default 'participant' check (role in ('admin', 'participant')),
   status text not null default 'pending' check (status in ('pending', 'approved', 'rejected')),
+  is_sanedrin boolean not null default false,
   created_at timestamptz not null default now()
 );
 
+-- El Sanedrín: hasta 3 participantes (aparte del admin) con acceso previo
+-- a la base de datos de corredores para clasificarlos por categoría.
 create table if not exists riders (
   id uuid primary key default gen_random_uuid(),
   name text not null,
-  category text not null check (category in ('amarillo', 'rosa', 'verde')),
-  multiplier numeric(3, 2) not null,
+  team text,
+  division text check (division in ('worldtour', 'proteam')),
+  category text not null default 'verde' check (category in ('amarillo', 'rosa', 'verde')),
+  multiplier numeric(3, 2) not null default 2.00,
   created_at timestamptz not null default now()
 );
 
@@ -87,3 +92,11 @@ insert into races (order_num, name, stars, multiplier, logo_path) values
   (11, 'La Flèche Wallonne', 3, 1.5, '/logos/11-la-fleche-wallonne.png'),
   (12, 'Liège-Bastogne-Liège', 5, 2, '/logos/12-liege-bastogne-liege.png')
 on conflict (order_num) do nothing;
+
+-- Migración idempotente para una base de datos ya desplegada (ejecutar sin
+-- miedo aunque las columnas ya existan):
+alter table users add column if not exists is_sanedrin boolean not null default false;
+alter table riders add column if not exists team text;
+alter table riders add column if not exists division text;
+alter table riders alter column category set default 'verde';
+alter table riders alter column multiplier set default 2.00;

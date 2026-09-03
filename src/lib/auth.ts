@@ -20,6 +20,11 @@ export type SessionPayload = {
   displayName: string;
   role: "admin" | "participant";
   status: "pending" | "approved" | "rejected";
+  // Solo para mostrar/ocultar el enlace "Corredores" en el menú: el
+  // permiso real siempre se reverifica contra la base de datos en
+  // /corredores y su API, porque este campo puede quedar desactualizado
+  // durante los 30 días de vida del token si el admin cambia el Sanedrín.
+  sanedrin: boolean;
 };
 
 export async function hashPassword(password: string) {

@@ -228,8 +228,8 @@ function SquadBlock({ title, when }: { title: string; when: string }) {
       <div className="mb-2 text-[11px] text-text-soft">{when}</div>
       <div className="flex flex-wrap gap-2">
         <Tag>Amarillo ×1</Tag>
-        <Tag>Rosa ×2</Tag>
-        <Tag>Verde ×3</Tag>
+        <Tag>Rosa ×1,5</Tag>
+        <Tag>Verde ×2</Tag>
       </div>
     </div>
   );

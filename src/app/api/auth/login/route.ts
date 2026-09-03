@@ -17,7 +17,7 @@ export async function POST(request: Request) {
 
   const normalizedEmail = parsed.data.email.trim().toLowerCase();
   const rows = await sql`
-    select id, email, password_hash, display_name, role, status
+    select id, email, password_hash, display_name, role, status, is_sanedrin
     from users where email = ${normalizedEmail}
   `;
   const user = rows[0];
@@ -35,6 +35,7 @@ export async function POST(request: Request) {
     displayName: user.display_name,
     role: user.role,
     status: user.status,
+    sanedrin: Boolean(user.is_sanedrin),
   });
 
   return NextResponse.json({ ok: true, status: user.status });
