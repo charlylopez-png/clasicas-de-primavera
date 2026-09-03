@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Logo from "@/components/logo";
 
 export default function Home() {
   return (
@@ -14,8 +15,11 @@ export default function Home() {
           <span className="inline-block rounded-full border border-white/40 px-3 py-1 font-display text-[11px] uppercase tracking-[0.16em]">
             Reglamento oficial · 2027
           </span>
-          <h1 className="mt-5 font-display text-6xl font-bold leading-none sm:text-7xl">
-            UKT
+          <h1 className="mt-5">
+            <Logo
+              className="h-16 w-auto sm:h-20"
+              color="var(--hero-text)"
+            />
           </h1>
           <div className="mt-3 font-display text-sm uppercase tracking-wide text-amarillo">
             Udaberriko Klasiko Txirrindulariak

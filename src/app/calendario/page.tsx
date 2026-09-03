@@ -44,16 +44,16 @@ export default function CalendarioPage() {
             className="flex items-center gap-4 rounded-2xl border border-line bg-surface p-3"
           >
             <div
-              className={`flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-xl ${
+              className={`h-16 w-16 shrink-0 overflow-hidden rounded-xl border-2 border-white ${
                 race.darkTile ? "bg-[var(--hero-bg-1)]" : "bg-white"
               }`}
             >
               <Image
                 src={race.logo}
                 alt={race.name}
-                width={56}
-                height={56}
-                className="h-12 w-12 object-contain"
+                width={64}
+                height={64}
+                className="h-full w-full object-cover"
               />
             </div>
             <div className="min-w-0 flex-1">

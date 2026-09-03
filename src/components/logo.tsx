@@ -1,9 +1,16 @@
 // Wordmark "UKT" al estilo de los carteles de sectores de pavé de las
 // clásicas (Paris–Roubaix, Ronde van Vlaanderen…): letras sólidas
 // "fracturadas" en piezas, como si estuvieran hechas de adoquines.
-// El color usa el token --pill-text, que ya se adapta solo entre modo
-// claro y oscuro.
-export default function Logo({ className }: { className?: string }) {
+// Por defecto usa --pill-text (se adapta solo entre modo claro y
+// oscuro); pásale `color` para forzar un color fijo, por ejemplo sobre
+// un fondo que no cambia con el tema (como el hero verde de portada).
+export default function Logo({
+  className,
+  color = "var(--pill-text)",
+}: {
+  className?: string;
+  color?: string;
+}) {
   return (
     <svg viewBox="0 0 148 44" className={className} role="img" aria-label="UKT">
       <defs>
@@ -34,7 +41,7 @@ export default function Logo({ className }: { className?: string }) {
         fontWeight={700}
         fontSize={40}
         letterSpacing="-1"
-        fill="var(--pill-text)"
+        fill={color}
         mask="url(#ukt-cuts)"
       >
         UKT
