@@ -1,3 +1,15 @@
+#!/usr/bin/env bash
+set -e
+
+if [ ! -f db/schema.sql ]; then
+  echo "ERROR: no encuentro db/schema.sql en esta carpeta."
+  echo "Asegurate de estar en la raiz del repo clasicas-de-primavera antes de ejecutar este script."
+  exit 1
+fi
+
+mkdir -p src/components
+
+cat > "src/components/squad-selector.tsx" << 'EOF'
 "use client";
 
 import { useMemo, useState, useTransition } from "react";
@@ -254,3 +266,15 @@ export default function SquadSelector({
     </div>
   );
 }
+EOF
+
+git add -A
+git commit -m "Anade filtro por color en el selector de Equipo Base / Last Draft
+
+Ademas de buscar por nombre/equipo y filtrar por division, ahora se
+puede filtrar la lista de corredores por categoria (Amarillo/Rosa/Verde)
+con un chip de color, tanto en /mi-equipo como en cada /calendario/[n].
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_016LatMv4fA2uvbQTCSnJG6u"
+git push
