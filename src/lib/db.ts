@@ -39,3 +39,12 @@ export const sql: NeonQueryFunction<false, false> = ((
 export function hasDatabase() {
   return Boolean(getConnectionString());
 }
+
+// Para operaciones que deben ser todo-o-nada (p.ej. sustituir las 6 fichas
+// de un equipo): junta varias queries construidas con `sql` en una única
+// transacción HTTP no interactiva. No las awaitees antes de pasarlas aquí.
+export function transaction<T = unknown>(
+  queries: Promise<T>[]
+): Promise<T[]> {
+  return getClient().transaction(queries as never) as Promise<T[]>;
+}

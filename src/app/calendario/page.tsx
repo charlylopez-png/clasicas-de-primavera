@@ -1,55 +1,53 @@
 import Image from "next/image";
+import Link from "next/link";
+import { sql } from "@/lib/db";
+import { formatCoefficient } from "@/lib/riders";
 
 type Race = {
-  order: number;
+  order_num: number;
   name: string;
   stars: number;
-  multiplier: string;
-  logo: string;
-  darkTile?: boolean;
+  multiplier: string | number;
+  logo_path: string;
 };
 
-const RACES: Race[] = [
-  { order: 1, name: "Omloop Het Nieuwsblad", stars: 3, multiplier: "×1,5", logo: "/logos/01-omloop-het-nieuwsblad.jpg" },
-  { order: 2, name: "Strade Bianche", stars: 4, multiplier: "×1,75", logo: "/logos/02-strade-bianche.png" },
-  { order: 3, name: "Milano–Sanremo", stars: 5, multiplier: "×2", logo: "/logos/03-milano-sanremo.png" },
-  { order: 4, name: "Ronde van Brugge", stars: 2, multiplier: "×1", logo: "/logos/04-ronde-van-brugge.jpg" },
-  { order: 5, name: "E3 Saxo Classic", stars: 3, multiplier: "×1,5", logo: "/logos/05-e3-saxo-classic.png" },
-  { order: 6, name: "In Flanders Fields", stars: 2, multiplier: "×1", logo: "/logos/06-gent-wevelgem-in-flanders-fields.png" },
-  { order: 7, name: "Dwars door Vlaanderen", stars: 2, multiplier: "×1", logo: "/logos/07-dwars-door-vlaanderen.png" },
-  { order: 8, name: "Ronde van Vlaanderen", stars: 5, multiplier: "×2", logo: "/logos/08-ronde-van-vlaanderen.png" },
-  { order: 9, name: "Paris–Roubaix", stars: 5, multiplier: "×2", logo: "/logos/09-paris-roubaix.png", darkTile: true },
-  { order: 10, name: "Amstel Gold Race", stars: 3, multiplier: "×1,5", logo: "/logos/10-amstel-gold-race.png" },
-  { order: 11, name: "La Flèche Wallonne", stars: 3, multiplier: "×1,5", logo: "/logos/11-la-fleche-wallonne.png" },
-  { order: 12, name: "Liège–Bastogne–Liège", stars: 5, multiplier: "×2", logo: "/logos/12-liege-bastogne-liege.png" },
-];
+// La única carrera con fondo oscuro fijo en el logo (Paris–Roubaix).
+const DARK_TILE_ORDERS = new Set([9]);
 
-export default function CalendarioPage() {
+export default async function CalendarioPage() {
+  const races = (await sql`
+    select order_num, name, stars, multiplier, logo_path
+    from races
+    order by order_num
+  `) as Race[];
+
   return (
     <div className="mx-auto max-w-3xl px-5 py-10">
       <div className="mb-1 flex items-center gap-2 font-display text-[11px] uppercase tracking-[0.16em] text-verde">
         <span className="h-1.5 w-1.5 rounded-full bg-amarillo" />
-        Calendario 2027
+        Calendario 2026
       </div>
       <h1 className="text-2xl text-verde-deep">Las 12 clásicas</h1>
       <p className="mt-2 max-w-prose text-sm text-text-soft">
         De finales de febrero a finales de abril, con su categoría y el
-        coeficiente que aporta a la puntuación.
+        coeficiente que aporta a la puntuación. Pincha en una carrera para
+        ver sus datos y fichar tu Last Draft.
       </p>
 
       <div className="mt-6 grid gap-3 sm:grid-cols-2">
-        {RACES.map((race) => (
-          <div
-            key={race.order}
-            className="flex items-center gap-4 rounded-2xl border border-line bg-surface p-3"
+        {races.map((race) => (
+          <Link
+            key={race.order_num}
+            href={`/calendario/${race.order_num}`}
+            className="flex items-center gap-4 rounded-2xl border border-line bg-surface p-3 hover:border-verde-deep/50"
           >
             <div
               className={`h-16 w-16 shrink-0 overflow-hidden rounded-xl border-2 border-white ${
-                race.darkTile ? "bg-[var(--hero-bg-1)]" : "bg-white"
+                DARK_TILE_ORDERS.has(race.order_num) ? "bg-[var(--hero-bg-1)]" : "bg-white"
               }`}
             >
               <Image
-                src={race.logo}
+                src={race.logo_path}
                 alt={race.name}
                 width={64}
                 height={64}
@@ -58,7 +56,7 @@ export default function CalendarioPage() {
             </div>
             <div className="min-w-0 flex-1">
               <div className="font-display text-[11px] text-text-soft">
-                {String(race.order).padStart(2, "0")}
+                {String(race.order_num).padStart(2, "0")}
               </div>
               <div className="truncate text-sm font-semibold">{race.name}</div>
               <div className="mt-0.5 text-amarillo" aria-label={`${race.stars} estrellas`}>
@@ -67,9 +65,9 @@ export default function CalendarioPage() {
               </div>
             </div>
             <span className="shrink-0 rounded-full bg-rosa px-2.5 py-1 font-display text-[11px] font-semibold text-white">
-              {race.multiplier}
+              {formatCoefficient(race.multiplier)}
             </span>
-          </div>
+          </Link>
         ))}
       </div>
 
