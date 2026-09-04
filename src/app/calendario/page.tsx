@@ -9,7 +9,7 @@ type Race = {
   stars: number;
   multiplier: string | number;
   logo_path: string;
-  race_date: string | null;
+  race_date: string | Date | null;
 };
 
 // La única carrera con fondo oscuro fijo en el logo (Paris–Roubaix).

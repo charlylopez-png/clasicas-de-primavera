@@ -37,12 +37,26 @@ const MONTHS_ES_SHORT = [
   "jul", "ago", "sep", "oct", "nov", "dic",
 ];
 
-// Formatea a mano una fecha "YYYY-MM-DD" (tal cual la devuelve Postgres)
-// sin pasar por Date, para no depender de la zona horaria del servidor:
-// new Date("YYYY-MM-DD") se interpreta en UTC y puede desplazarse un día
-// al formatear en local.
-export function formatRaceDate(isoDate: string, style: "long" | "short" = "long") {
-  const [year, month, day] = isoDate.split("-").map(Number);
+// Formatea una fecha de carrera sin desplazamientos de zona horaria. La
+// columna `race_date` es un `date` de Postgres: según la versión del
+// driver puede llegar como string "YYYY-MM-DD" o ya como objeto Date (en
+// cuyo caso usamos los getters UTC, porque un `date` sin hora se
+// interpreta en UTC y los getters locales podrían restar/sumar un día
+// según la zona horaria del servidor).
+export function formatRaceDate(
+  value: string | Date,
+  style: "long" | "short" = "long"
+) {
+  let year: number;
+  let month: number; // 1-12
+  let day: number;
+  if (value instanceof Date) {
+    year = value.getUTCFullYear();
+    month = value.getUTCMonth() + 1;
+    day = value.getUTCDate();
+  } else {
+    [year, month, day] = value.split("-").map(Number);
+  }
   if (style === "short") return `${day} ${MONTHS_ES_SHORT[month - 1]} ${year}`;
   return `${day} de ${MONTHS_ES_LONG[month - 1]} de ${year}`;
 }
