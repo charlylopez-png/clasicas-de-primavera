@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { sql } from "@/lib/db";
-import { formatCoefficient } from "@/lib/riders";
+import { formatCoefficient, formatRaceDate } from "@/lib/riders";
 
 type Race = {
   order_num: number;
@@ -9,6 +9,7 @@ type Race = {
   stars: number;
   multiplier: string | number;
   logo_path: string;
+  race_date: string | null;
 };
 
 // La única carrera con fondo oscuro fijo en el logo (Paris–Roubaix).
@@ -16,7 +17,7 @@ const DARK_TILE_ORDERS = new Set([9]);
 
 export default async function CalendarioPage() {
   const races = (await sql`
-    select order_num, name, stars, multiplier, logo_path
+    select order_num, name, stars, multiplier, logo_path, race_date
     from races
     order by order_num
   `) as Race[];
@@ -25,7 +26,7 @@ export default async function CalendarioPage() {
     <div className="mx-auto max-w-3xl px-5 py-10">
       <div className="mb-1 flex items-center gap-2 font-display text-[11px] uppercase tracking-[0.16em] text-verde">
         <span className="h-1.5 w-1.5 rounded-full bg-amarillo" />
-        Calendario 2026
+        Calendario 2027
       </div>
       <h1 className="text-2xl text-verde-deep">Las 12 clásicas</h1>
       <p className="mt-2 max-w-prose text-sm text-text-soft">
@@ -59,6 +60,11 @@ export default async function CalendarioPage() {
                 {String(race.order_num).padStart(2, "0")}
               </div>
               <div className="truncate text-sm font-semibold">{race.name}</div>
+              {race.race_date && (
+                <div className="text-[11px] text-text-soft">
+                  {formatRaceDate(race.race_date, "short")}
+                </div>
+              )}
               <div className="mt-0.5 text-amarillo" aria-label={`${race.stars} estrellas`}>
                 {"★".repeat(race.stars)}
                 <span className="text-line">{"★".repeat(5 - race.stars)}</span>

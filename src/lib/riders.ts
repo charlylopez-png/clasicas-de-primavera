@@ -28,6 +28,25 @@ export function squadCounts(categories: RiderCategory[]) {
   return counts;
 }
 
+const MONTHS_ES_LONG = [
+  "enero", "febrero", "marzo", "abril", "mayo", "junio",
+  "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre",
+];
+const MONTHS_ES_SHORT = [
+  "ene", "feb", "mar", "abr", "may", "jun",
+  "jul", "ago", "sep", "oct", "nov", "dic",
+];
+
+// Formatea a mano una fecha "YYYY-MM-DD" (tal cual la devuelve Postgres)
+// sin pasar por Date, para no depender de la zona horaria del servidor:
+// new Date("YYYY-MM-DD") se interpreta en UTC y puede desplazarse un día
+// al formatear en local.
+export function formatRaceDate(isoDate: string, style: "long" | "short" = "long") {
+  const [year, month, day] = isoDate.split("-").map(Number);
+  if (style === "short") return `${day} ${MONTHS_ES_SHORT[month - 1]} ${year}`;
+  return `${day} de ${MONTHS_ES_LONG[month - 1]} de ${year}`;
+}
+
 // Los valores numeric de Postgres llegan como string; formatea "1.5" como
 // se ve en toda la app: "×1,5".
 export function formatCoefficient(value: string | number) {
