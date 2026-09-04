@@ -78,11 +78,11 @@ export default function RidersManager({ initialRiders }: { initialRiders: Rider[
 
   return (
     <div className="mt-6">
-      <div className="flex flex-wrap gap-2 text-[11px]">
+      <div className="flex flex-wrap gap-2 text-xs">
         {CATEGORIES.map((c) => (
           <span
             key={c}
-            className={`rounded-full px-2.5 py-1 font-display uppercase tracking-wide ${CATEGORY_STYLES[c]}`}
+            className={`rounded-full px-3 py-1.5 font-display uppercase tracking-wide ${CATEGORY_STYLES[c]}`}
           >
             {CATEGORY_LABEL[c]} · {counts[c]}
           </span>
@@ -95,12 +95,12 @@ export default function RidersManager({ initialRiders }: { initialRiders: Rider[
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Buscar corredor o equipo…"
-          className="w-full rounded-full border border-line bg-surface px-4 py-2 text-sm outline-none focus:border-verde"
+          className="w-full rounded-full border border-line bg-surface px-4 py-2.5 text-base outline-none focus:border-verde"
         />
         <select
           value={division}
           onChange={(e) => setDivision(e.target.value as typeof division)}
-          className="rounded-full border border-line bg-surface px-4 py-2 text-sm outline-none focus:border-verde"
+          className="rounded-full border border-line bg-surface px-4 py-2.5 text-base outline-none focus:border-verde"
         >
           <option value="all">Todas las divisiones</option>
           <option value="worldtour">World Tour</option>
@@ -108,20 +108,20 @@ export default function RidersManager({ initialRiders }: { initialRiders: Rider[
         </select>
       </div>
 
-      <div className="mt-5 flex flex-col gap-6">
+      <div className="mt-5 flex flex-col gap-5">
         {groups.map(([team, teamRiders]) => (
           <div key={team}>
-            <h3 className="font-display text-xs uppercase tracking-wide text-verde-deep">
+            <h3 className="font-display text-sm uppercase tracking-wide text-verde-deep">
               {team}
             </h3>
             <div className="mt-2 flex flex-col gap-1.5">
               {teamRiders.map((rider) => (
                 <div
                   key={rider.id}
-                  className="flex items-center justify-between gap-3 rounded-xl border border-line bg-surface px-3 py-2"
+                  className="flex items-center justify-between gap-3 rounded-xl border border-line bg-surface px-3.5 py-2.5"
                 >
-                  <span className="min-w-0 truncate text-sm">{rider.name}</span>
-                  <div className="flex shrink-0 gap-1">
+                  <span className="min-w-0 truncate text-base">{rider.name}</span>
+                  <div className="flex shrink-0 gap-1.5">
                     {CATEGORIES.map((c) => (
                       <button
                         key={c}
@@ -130,7 +130,7 @@ export default function RidersManager({ initialRiders }: { initialRiders: Rider[
                         onClick={() => setCategory(rider.id, c)}
                         aria-pressed={rider.category === c}
                         title={CATEGORY_LABEL[c]}
-                        className={`h-6 w-6 rounded-full border-2 transition ${
+                        className={`h-8 w-8 rounded-full border-2 transition ${
                           rider.category === c
                             ? `${CATEGORY_STYLES[c]} border-transparent`
                             : "border-line bg-transparent opacity-40 hover:opacity-70"
