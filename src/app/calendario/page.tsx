@@ -70,7 +70,7 @@ export default async function CalendarioPage() {
                 <span className="text-line">{"★".repeat(5 - race.stars)}</span>
               </div>
             </div>
-            <span className="shrink-0 rounded-full bg-rosa px-2.5 py-1 font-display text-[11px] font-semibold text-white">
+            <span className="shrink-0 rounded-full bg-rosa px-2.5 py-1 font-display text-[11px] font-semibold text-on-accent">
               {formatCoefficient(race.multiplier)}
             </span>
           </Link>

@@ -15,9 +15,9 @@ export type Rider = {
 const CATEGORIES: RiderCategory[] = ["amarillo", "rosa", "verde"];
 
 const CATEGORY_STYLES: Record<RiderCategory, string> = {
-  amarillo: "bg-amarillo text-[#372802]",
-  rosa: "bg-rosa text-white",
-  verde: "bg-verde text-[var(--hero-text)]",
+  amarillo: "bg-amarillo text-on-accent",
+  rosa: "bg-rosa text-on-accent",
+  verde: "bg-verde text-on-accent",
 };
 
 export default function RidersManager({ initialRiders }: { initialRiders: Rider[] }) {

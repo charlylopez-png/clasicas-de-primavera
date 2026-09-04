@@ -61,7 +61,7 @@ function AuthActions({ session }: { session: SessionPayload | null }) {
       <NavLink href="/login">Entrar</NavLink>
       <Link
         href="/signup"
-        className="rounded-full bg-verde px-4 py-2.5 text-center font-display text-xs uppercase tracking-wide text-[var(--hero-text)] sm:ml-1 sm:px-3.5 sm:py-2"
+        className="rounded-full bg-amarillo px-4 py-2.5 text-center font-display text-xs uppercase tracking-wide text-on-accent hover:bg-gold sm:ml-1 sm:px-3.5 sm:py-2"
       >
         Crear cuenta
       </Link>

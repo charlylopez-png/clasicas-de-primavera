@@ -62,7 +62,7 @@ export default function ReglamentoPage() {
             <div
               key={pos}
               className={`flex items-center justify-between rounded-lg px-3 py-2 text-sm ${
-                i < 3 ? "bg-amarillo text-[#2b2103] font-bold" : "bg-surface"
+                i < 3 ? "bg-amarillo text-on-accent font-bold" : "bg-surface"
               }`}
             >
               <span>{pos}º</span>
@@ -83,7 +83,7 @@ export default function ReglamentoPage() {
           <CategoryCard
             name="Amarillo"
             mult="×1"
-            className="bg-gradient-to-br from-[#f0c23a] to-[#c68a06] text-[#372802]"
+            className="bg-gradient-to-br from-[#e9c03a] to-[#c8901a] text-on-accent"
           >
             Top élite y favoritos indiscutibles (Pogačar, MVDP…). Ganan a
             menudo, pero apenas multiplican.
@@ -91,7 +91,7 @@ export default function ReglamentoPage() {
           <CategoryCard
             name="Rosa"
             mult="×1,5"
-            className="bg-gradient-to-br from-[#ef6ea0] to-[#c53f74] text-white"
+            className="bg-gradient-to-br from-[#f58fb0] to-[#d16c93] text-on-accent"
           >
             Corredores de élite, candidatos serios sin ser los favoritos
             absolutos.
@@ -99,7 +99,7 @@ export default function ReglamentoPage() {
           <CategoryCard
             name="Verde"
             mult="×2"
-            className="bg-gradient-to-br from-[#4fa576] to-[#215f3e] text-white"
+            className="bg-gradient-to-br from-[#3f8663] to-[#1a4c36] text-white"
           >
             El resto del pelotón. Menos probable que puntúen, pero cuando lo
             hacen, multiplican por dos.
@@ -121,7 +121,7 @@ export default function ReglamentoPage() {
         <h2 className="text-xl text-verde-deep">El Sprint</h2>
         <div
           className="mt-4 rounded-2xl p-5 text-sm leading-relaxed text-white"
-          style={{ background: "linear-gradient(135deg, var(--accent-rosa, #c53f74), #a63464)" }}
+          style={{ background: "linear-gradient(135deg, #c53f74, #a63464)" }}
         >
           &quot;La máquina&quot; sortea al inicio de temporada un rival
           distinto para cada una de las 12 carreras. En cada una, además de

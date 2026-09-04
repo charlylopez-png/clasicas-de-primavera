@@ -86,8 +86,8 @@ export default async function AdminPage() {
                 <span
                   className={`shrink-0 rounded-full px-2.5 py-1 text-[11px] font-semibold ${
                     u.status === "approved"
-                      ? "bg-verde text-[var(--hero-text)]"
-                      : "bg-rosa text-white"
+                      ? "bg-verde text-on-accent"
+                      : "bg-rosa text-on-accent"
                   }`}
                 >
                   {u.status === "approved" ? "Aprobado" : "Rechazado"}

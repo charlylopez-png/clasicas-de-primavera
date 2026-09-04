@@ -98,7 +98,7 @@ export default async function MiEquipoPage() {
                   <div className="truncate text-sm font-semibold">{race.name}</div>
                 </div>
                 {racePicks.length === 6 ? (
-                  <span className="shrink-0 rounded-full bg-verde px-2.5 py-1 text-[11px] font-semibold text-[var(--hero-text)]">
+                  <span className="shrink-0 rounded-full bg-verde px-2.5 py-1 text-[11px] font-semibold text-on-accent">
                     Fichado ✓
                   </span>
                 ) : (

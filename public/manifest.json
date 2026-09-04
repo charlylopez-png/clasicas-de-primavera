@@ -1,0 +1,29 @@
+{
+  "name": "UKT — Udaberriko Klasiko Txirrindulariak",
+  "short_name": "UKT",
+  "description": "La porra ciclista de las clásicas de primavera entre amigos.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0d2c20",
+  "theme_color": "#0d2c20",
+  "icons": [
+    {
+      "src": "/ukt-identity/png/ukt-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/ukt-identity/png/ukt-icon-512-cobble.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/ukt-identity/png/ukt-icon-512-cobble.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

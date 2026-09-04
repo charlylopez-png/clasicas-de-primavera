@@ -20,9 +20,9 @@ export type SelectableRider = {
 const CATEGORIES: RiderCategory[] = ["amarillo", "rosa", "verde"];
 
 const CATEGORY_STYLES: Record<RiderCategory, string> = {
-  amarillo: "bg-amarillo text-[#372802]",
-  rosa: "bg-rosa text-white",
-  verde: "bg-verde text-[var(--hero-text)]",
+  amarillo: "bg-amarillo text-on-accent",
+  rosa: "bg-rosa text-on-accent",
+  verde: "bg-verde text-on-accent",
 };
 
 export default function SquadSelector({
@@ -144,7 +144,7 @@ export default function SquadSelector({
           type="button"
           disabled={!canSave || isPending}
           onClick={save}
-          className="ml-auto rounded-full bg-verde-deep px-4 py-2.5 font-display text-sm uppercase tracking-wide text-white disabled:opacity-40"
+          className="ml-auto rounded-full bg-amarillo px-4 py-2.5 font-display text-sm uppercase tracking-wide text-on-accent hover:bg-gold disabled:opacity-40"
         >
           {isPending ? "Guardando…" : `Guardar (${total}/${SQUAD_SIZE})`}
         </button>
@@ -185,7 +185,7 @@ export default function SquadSelector({
           onClick={() => setCategoryFilter("all")}
           className={`rounded-full border px-3 py-1.5 font-display text-xs uppercase tracking-wide ${
             categoryFilter === "all"
-              ? "border-verde-deep bg-verde-deep text-white"
+              ? "border-verde-deep bg-verde-deep text-on-accent"
               : "border-line bg-surface text-text-soft"
           }`}
         >

@@ -24,7 +24,7 @@ export default function UserActions({ userId }: { userId: string }) {
         type="button"
         disabled={isPending}
         onClick={() => act("approve")}
-        className="rounded-full bg-verde px-3 py-1.5 font-display text-[11px] uppercase tracking-wide text-[var(--hero-text)] disabled:opacity-50"
+        className="rounded-full bg-amarillo px-3 py-1.5 font-display text-[11px] uppercase tracking-wide text-on-accent hover:bg-gold disabled:opacity-50"
       >
         Aprobar
       </button>

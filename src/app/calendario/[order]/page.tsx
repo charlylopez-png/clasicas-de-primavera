@@ -98,7 +98,7 @@ export default async function RaceDetailPage({
               {"★".repeat(race.stars)}
               <span className="text-line">{"★".repeat(5 - race.stars)}</span>
             </span>
-            <span className="rounded-full bg-rosa px-2.5 py-1 font-display text-[11px] font-semibold text-white">
+            <span className="rounded-full bg-rosa px-2.5 py-1 font-display text-[11px] font-semibold text-on-accent">
               {formatCoefficient(race.multiplier)}
             </span>
           </div>

@@ -41,7 +41,7 @@ export default function SanedrinToggle({
         onClick={toggle}
         className={`shrink-0 rounded-full px-3 py-1.5 font-display text-[11px] uppercase tracking-wide disabled:opacity-50 ${
           isSanedrin
-            ? "bg-verde-deep text-white"
+            ? "bg-verde-deep text-on-accent"
             : "border border-verde-deep text-verde-deep"
         }`}
       >

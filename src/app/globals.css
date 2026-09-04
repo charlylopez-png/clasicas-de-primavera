@@ -1,62 +1,41 @@
 @import "tailwindcss";
 
+/* ---------------------------------------------------------------
+   UKT — identidad de marca (Udaberriko Klasiko Txirrindulariak)
+   Adoquinado + verde de pelotón. Tema único (sin variante clara):
+   la marca no define un modo claro, así que se usa el mismo verde
+   oscuro en toda la app.
+   --------------------------------------------------------------- */
+
 :root {
-  --bg: #f7f3e8;
-  --surface: #efe8d5;
-  --surface-2: #e3dcc8;
-  --text: #1c2420;
-  --text-soft: #5c665a;
-  --line: #ddd5bf;
-  --accent-verde: #2f7a52;
-  --accent-verde-deep: #163826;
-  --accent-amarillo: #c68a06;
-  --accent-rosa: #c53f74;
-  --hero-bg-1: #163826;
-  --hero-bg-2: #2f7a52;
-  --hero-text: #f7f3e8;
-  --pill-bg: rgba(22, 56, 38, 0.07);
-  --pill-text: #163826;
-  --shadow: rgba(22, 40, 30, 0.1);
-}
+  /* --- Superficies (escala de verdes de la marca) --- */
+  --bg: #0d2c20; /* ukt-green-800: fondo base de la app */
+  --surface: #123c2b; /* ukt-green-700: tarjetas */
+  --surface-2: #1a4c36; /* ukt-green-600: hover / superficie secundaria */
+  --bg-app-gradient: linear-gradient(160deg, #0d2c20 0%, #17422f 55%, #0f3325 100%);
 
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #101c16;
-    --surface: #16251c;
-    --surface-2: #1e3227;
-    --text: #edf1e9;
-    --text-soft: #a3b1a1;
-    --line: #28392e;
-    --accent-verde: #63c592;
-    --accent-verde-deep: #9fe0bc;
-    --accent-amarillo: #f0c23a;
-    --accent-rosa: #f28fb0;
-    --hero-bg-1: #0b1712;
-    --hero-bg-2: #1b3a28;
-    --hero-text: #f3efdf;
-    --pill-bg: rgba(159, 224, 188, 0.12);
-    --pill-text: #cfe9db;
-    --shadow: rgba(0, 0, 0, 0.45);
-  }
-}
+  /* --- Texto --- */
+  --text: #eef3e7; /* ukt-bone */
+  --text-soft: rgba(238, 243, 231, 0.7);
+  --text-faint: rgba(238, 243, 231, 0.45);
+  --line: rgba(238, 243, 231, 0.14);
 
-:root[data-theme="dark"] {
-  --bg: #101c16;
-  --surface: #16251c;
-  --surface-2: #1e3227;
-  --text: #edf1e9;
-  --text-soft: #a3b1a1;
-  --line: #28392e;
-  --accent-verde: #63c592;
-  --accent-verde-deep: #9fe0bc;
-  --accent-amarillo: #f0c23a;
-  --accent-rosa: #f28fb0;
-  --hero-bg-1: #0b1712;
-  --hero-bg-2: #1b3a28;
-  --hero-text: #f3efdf;
-  --pill-bg: rgba(159, 224, 188, 0.12);
-  --pill-text: #cfe9db;
-  --shadow: rgba(0, 0, 0, 0.45);
+  /* --- Acentos de marca --- */
+  --accent-verde: #5fc79b; /* ukt-mint-400: acento de información */
+  --accent-verde-deep: #5fc79b; /* mismo menta, para títulos/labels con más peso */
+  --accent-amarillo: #e9c03a; /* ukt-yellow-400: acción principal */
+  --accent-gold: #c8901a; /* ukt-gold-500: hover del botón principal */
+  --accent-rosa: #f58fb0; /* ukt-pink-400: solo categoría / coeficiente */
+  --on-accent: #123c2b; /* texto sobre cualquier acento sólido (nunca blanco) */
+
+  /* --- Cabecera / hero con textura de adoquinado --- */
+  --hero-bg-1: #071a11; /* ukt-green-950 */
+  --hero-bg-2: #123c2b; /* ukt-green-700 */
+  --hero-text: #eef3e7;
+
+  --pill-bg: rgba(238, 243, 231, 0.08);
+  --pill-text: #eef3e7;
+  --shadow: rgba(4, 16, 10, 0.45);
 }
 
 @theme inline {
@@ -69,13 +48,17 @@
   --color-verde: var(--accent-verde);
   --color-verde-deep: var(--accent-verde-deep);
   --color-amarillo: var(--accent-amarillo);
+  --color-gold: var(--accent-gold);
   --color-rosa: var(--accent-rosa);
+  --color-on-accent: var(--on-accent);
   --font-display: var(--font-oswald);
-  --font-body: var(--font-karla);
+  --font-body: var(--font-nunito);
+  --font-logo: var(--font-archivo);
 }
 
 body {
-  background: var(--bg);
+  margin: 0;
+  background: var(--bg-app-gradient);
   color: var(--text);
   font-family: var(--font-body), sans-serif;
 }
@@ -88,4 +71,10 @@ h3,
   text-transform: uppercase;
   letter-spacing: 0.02em;
   text-wrap: balance;
+}
+
+.font-logo {
+  font-family: var(--font-logo), "Arial Black", sans-serif;
+  letter-spacing: -0.02em;
+  line-height: 0.8;
 }
