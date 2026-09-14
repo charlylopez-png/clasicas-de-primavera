@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { sql } from "@/lib/db";
 import { getSession } from "@/lib/auth";
@@ -56,8 +57,33 @@ export default async function MundialPage() {
         <span className="h-1.5 w-1.5 rounded-full bg-amarillo" />
         Prueba especial
       </div>
-      <h1 className="text-2xl text-verde-deep">{event.name}</h1>
-      <p className="mt-2 max-w-prose text-sm text-text-soft">
+
+      <div className="flex items-center gap-4">
+        <div className="h-20 w-20 shrink-0 overflow-hidden rounded-2xl border-2 border-white bg-white">
+          <Image
+            src="/mundial-logos/montreal-2026.png"
+            alt="Mundial de Montreal 2026"
+            width={80}
+            height={80}
+            className="h-full w-full object-cover"
+          />
+        </div>
+        <div className="min-w-0">
+          <h1 className="text-2xl text-verde-deep">{event.name}</h1>
+          <div className="mt-1.5 flex items-center gap-1.5 text-[11px] text-text-soft">
+            <span>Organiza</span>
+            <Image
+              src="/mundial-logos/uci.png"
+              alt="UCI"
+              width={54}
+              height={24}
+              className="h-4 w-auto rounded-sm bg-white px-1 py-0.5"
+            />
+          </div>
+        </div>
+      </div>
+
+      <p className="mt-4 max-w-prose text-sm text-text-soft">
         Carrera única, independiente de la clasificación general de las
         clásicas.
         {event.event_date && <> Se corre el {formatEventDate(event.event_date)}.</>}{" "}
