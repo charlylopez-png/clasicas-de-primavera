@@ -18,7 +18,8 @@ export default function SiteHeader({
   if (session?.status === "approved") {
     navItems.push(
       { href: "/mi-equipo", label: "Mi equipo" },
-      { href: "/clasificacion", label: "Clasificación" }
+      { href: "/clasificacion", label: "Clasificación" },
+      { href: "/mundial", label: "Mundial" }
     );
   }
   if (session?.role === "admin" || session?.sanedrin) {
