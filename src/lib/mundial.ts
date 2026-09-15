@@ -79,6 +79,87 @@ export function pointsForPosition(position: number | null | undefined) {
   return POINTS_BY_POSITION[position] ?? 0;
 }
 
+// País (tal como se guarda en special_event_riders.team, en español) →
+// código ISO 3166-1 alfa-2, para pintar la bandera antes del nombre. Los
+// dos casos sin código real (atletas neutrales y el Equipo de Refugiados)
+// se quedan sin bandera a propósito.
+const COUNTRY_ISO: Record<string, string> = {
+  Argelia: "DZ",
+  Australia: "AU",
+  Austria: "AT",
+  Bélgica: "BE",
+  Bermudas: "BM",
+  Belice: "BZ",
+  Brasil: "BR",
+  Canadá: "CA",
+  Chile: "CL",
+  China: "CN",
+  Colombia: "CO",
+  "Costa Rica": "CR",
+  Chipre: "CY",
+  Chequia: "CZ",
+  Dinamarca: "DK",
+  Dominica: "DM",
+  Ecuador: "EC",
+  Eritrea: "ER",
+  España: "ES",
+  Estonia: "EE",
+  Francia: "FR",
+  "Gran Bretaña": "GB",
+  "Guinea-Bisáu": "GW",
+  Alemania: "DE",
+  Grecia: "GR",
+  Guatemala: "GT",
+  Honduras: "HN",
+  Hungría: "HU",
+  Irlanda: "IE",
+  Israel: "IL",
+  Italia: "IT",
+  Japón: "JP",
+  Kazajistán: "KZ",
+  "Arabia Saudí": "SA",
+  Letonia: "LV",
+  Luxemburgo: "LU",
+  México: "MX",
+  Mongolia: "MN",
+  Mónaco: "MC",
+  Mauricio: "MU",
+  "Países Bajos": "NL",
+  Noruega: "NO",
+  "Nueva Zelanda": "NZ",
+  Panamá: "PA",
+  Polonia: "PL",
+  Portugal: "PT",
+  Rumanía: "RO",
+  Sudáfrica: "ZA",
+  Eslovenia: "SI",
+  Serbia: "RS",
+  Suiza: "CH",
+  Eslovaquia: "SK",
+  Suecia: "SE",
+  Tailandia: "TH",
+  Ucrania: "UA",
+  Uruguay: "UY",
+  "Estados Unidos": "US",
+  Uzbekistán: "UZ",
+  Venezuela: "VE",
+};
+
+function isoToFlagEmoji(iso: string) {
+  return String.fromCodePoint(
+    ...iso
+      .toUpperCase()
+      .split("")
+      .map((c) => 127397 + c.charCodeAt(0))
+  );
+}
+
+export function countryFlag(team: string | null | undefined): string {
+  if (!team) return "";
+  const iso = COUNTRY_ISO[team.trim()];
+  return iso ? isoToFlagEmoji(iso) : "";
+}
+
 export function formatEventDate(value: string | Date) {
   let year: number;
   let month: number;
