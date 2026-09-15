@@ -3,12 +3,12 @@
 import { useMemo, useState, useTransition } from "react";
 import {
   CATEGORY_LABEL,
-  countryFlag,
   SQUAD_REQUIREMENTS,
   SQUAD_SIZE,
   squadCounts,
   type RiderCategory,
 } from "@/lib/mundial";
+import CountryFlag from "./country-flag";
 
 export type MundialRider = {
   id: string;
@@ -230,7 +230,7 @@ export default function MundialSquadSelector({
         {groups.map(([country, countryRiders]) => (
           <div key={country}>
             <h3 className="font-display text-xs uppercase tracking-wide text-verde-deep">
-              {countryFlag(country) && <span className="mr-1.5">{countryFlag(country)}</span>}
+              <CountryFlag team={country} className="mr-1.5" />
               {country}
             </h3>
             <div className="mt-1.5 flex flex-col gap-1.5">

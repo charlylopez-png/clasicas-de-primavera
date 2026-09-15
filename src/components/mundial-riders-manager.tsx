@@ -1,7 +1,8 @@
 "use client";
 
 import { useMemo, useState, useTransition } from "react";
-import { CATEGORY_LABEL, countryFlag, type RiderCategory } from "@/lib/mundial";
+import { CATEGORY_LABEL, type RiderCategory } from "@/lib/mundial";
+import CountryFlag from "./country-flag";
 
 export type MundialAdminRider = {
   id: string;
@@ -276,9 +277,7 @@ export default function MundialRidersManager({
               ) : (
                 <div className="flex items-center justify-between gap-3">
                   <span className="min-w-0 flex-1 truncate">
-                    {countryFlag(rider.team) && (
-                      <span className="mr-1.5">{countryFlag(rider.team)}</span>
-                    )}
+                    <CountryFlag team={rider.team} className="mr-1.5" />
                     <span className="truncate text-base">{rider.name}</span>
                     {rider.team && (
                       <span className="ml-2 text-xs text-text-soft">{rider.team}</span>

@@ -8,6 +8,7 @@ import {
   pointsForPosition,
   type RiderCategory,
 } from "@/lib/mundial";
+import CountryFlag from "@/components/country-flag";
 
 type PickRow = {
   name: string;
@@ -90,6 +91,7 @@ export default async function MundialEquipoPage() {
                 className="flex items-center justify-between gap-3 rounded-xl border border-line bg-[var(--bg)] px-3.5 py-2.5"
               >
                 <span className="min-w-0 flex-1 truncate">
+                  <CountryFlag team={p.team} className="mr-1.5" />
                   <span className="truncate text-base">{p.name}</span>
                   {p.team && <span className="ml-2 text-xs text-text-soft">{p.team}</span>}
                 </span>

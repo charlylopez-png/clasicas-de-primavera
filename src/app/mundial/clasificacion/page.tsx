@@ -1,6 +1,7 @@
 import { sql } from "@/lib/db";
 import { getSession } from "@/lib/auth";
 import { getMundialEvent, isPicksLocked, pointsForPosition } from "@/lib/mundial";
+import CountryFlag from "@/components/country-flag";
 
 type SquadRow = {
   user_id: string;
@@ -113,6 +114,7 @@ export default async function MundialClasificacionPage() {
                 <div className="mt-2 flex flex-wrap gap-1.5 text-xs text-text-soft">
                   {s.picks.map((p, j) => (
                     <span key={j} className="rounded-full border border-line px-2.5 py-1">
+                      <CountryFlag team={p.team} className="mr-1" />
                       {p.rider_name} · {(pointsForPosition(p.position) * Number(p.multiplier)).toFixed(1)}
                     </span>
                   ))}

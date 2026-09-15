@@ -145,19 +145,15 @@ const COUNTRY_ISO: Record<string, string> = {
   Venezuela: "VE",
 };
 
-function isoToFlagEmoji(iso: string) {
-  return String.fromCodePoint(
-    ...iso
-      .toUpperCase()
-      .split("")
-      .map((c) => 127397 + c.charCodeAt(0))
-  );
-}
-
-export function countryFlag(team: string | null | undefined): string {
-  if (!team) return "";
+// Código ISO en minúsculas, listo para usar como clase de la librería
+// flag-icons (p.ej. "es" → clase CSS "fi-es"). Se usa una imagen real en
+// vez de un emoji de bandera porque muchos Windows/Chrome no dibujan los
+// emoji de bandera (se ve el código de país en dos cuadraditos en vez del
+// dibujo), mientras que la imagen se ve igual en cualquier sistema.
+export function countryIso(team: string | null | undefined): string | null {
+  if (!team) return null;
   const iso = COUNTRY_ISO[team.trim()];
-  return iso ? isoToFlagEmoji(iso) : "";
+  return iso ? iso.toLowerCase() : null;
 }
 
 export function formatEventDate(value: string | Date) {
