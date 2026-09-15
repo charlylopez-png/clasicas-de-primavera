@@ -27,15 +27,18 @@ const CATEGORY_STYLES: Record<RiderCategory, string> = {
 export default function MundialSquadSelector({
   riders,
   initialSelectedIds,
+  initialTeamName,
   locked,
 }: {
   riders: MundialRider[];
   initialSelectedIds: string[];
+  initialTeamName: string;
   locked: boolean;
 }) {
   const [selected, setSelected] = useState<Set<string>>(
     () => new Set(initialSelectedIds)
   );
+  const [teamName, setTeamName] = useState(initialTeamName);
   const [query, setQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<"all" | RiderCategory>("all");
   const [isPending, startTransition] = useTransition();
@@ -60,19 +63,29 @@ export default function MundialSquadSelector({
   const canSave =
     !locked &&
     total === SQUAD_SIZE &&
+    teamName.trim().length > 0 &&
     counts.amarillo === SQUAD_REQUIREMENTS.amarillo &&
     counts.rosa === SQUAD_REQUIREMENTS.rosa &&
     counts.verde === SQUAD_REQUIREMENTS.verde;
 
-  const filtered = useMemo(() => {
+  // Agrupados por país en primer lugar (no alfabético por nombre): cada
+  // grupo es un país, y dentro se puede seguir filtrando por color.
+  const groups = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return riders.filter((r) => {
-      if (categoryFilter !== "all" && r.category !== categoryFilter) return false;
-      if (!q) return true;
-      return (
-        r.name.toLowerCase().includes(q) || (r.team ?? "").toLowerCase().includes(q)
-      );
-    });
+    const byCountry = new Map<string, MundialRider[]>();
+    for (const r of riders) {
+      if (categoryFilter !== "all" && r.category !== categoryFilter) continue;
+      if (q && !r.name.toLowerCase().includes(q) && !(r.team ?? "").toLowerCase().includes(q)) {
+        continue;
+      }
+      const key = r.team ?? "Sin país";
+      if (!byCountry.has(key)) byCountry.set(key, []);
+      byCountry.get(key)!.push(r);
+    }
+    for (const list of byCountry.values()) {
+      list.sort((a, b) => a.name.localeCompare(b.name));
+    }
+    return Array.from(byCountry.entries()).sort((a, b) => a[0].localeCompare(b[0]));
   }, [riders, query, categoryFilter]);
 
   function toggle(rider: MundialRider) {
@@ -103,7 +116,10 @@ export default function MundialSquadSelector({
       const res = await fetch("/api/mundial/picks", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ riderIds: Array.from(selected) }),
+        body: JSON.stringify({
+          riderIds: Array.from(selected),
+          teamName: teamName.trim(),
+        }),
       });
       const data = await res.json().catch(() => null);
       if (!res.ok) {
@@ -116,7 +132,22 @@ export default function MundialSquadSelector({
 
   return (
     <div>
-      <div className="flex flex-wrap items-center gap-2">
+      {locked ? (
+        <p className="font-display text-sm uppercase tracking-wide text-verde-deep">
+          {teamName || "Sin nombre de equipo"}
+        </p>
+      ) : (
+        <input
+          type="text"
+          value={teamName}
+          onChange={(e) => setTeamName(e.target.value)}
+          maxLength={60}
+          placeholder="Nombre de tu equipo (ej. Los Rompepiernas)"
+          className="w-full rounded-full border border-line bg-surface px-4 py-2.5 text-base outline-none focus:border-verde"
+        />
+      )}
+
+      <div className="mt-3 flex flex-wrap items-center gap-2">
         {CATEGORIES.map((c) => (
           <span
             key={c}
@@ -194,40 +225,44 @@ export default function MundialSquadSelector({
         ))}
       </div>
 
-      <div className="mt-5 flex flex-col gap-1.5">
-        {filtered.map((rider) => {
-          const isSelected = selected.has(rider.id);
-          const full =
-            !isSelected && counts[rider.category] >= SQUAD_REQUIREMENTS[rider.category];
-          return (
-            <button
-              key={rider.id}
-              type="button"
-              disabled={locked || full}
-              onClick={() => toggle(rider)}
-              className={`flex items-center justify-between gap-3 rounded-xl border px-3.5 py-2.5 text-left transition ${
-                isSelected
-                  ? "border-verde-deep bg-verde-deep/10"
-                  : full || locked
-                  ? "border-line bg-surface opacity-40"
-                  : "border-line bg-surface hover:border-verde-deep/50"
-              }`}
-            >
-              <span className="min-w-0 flex-1 truncate">
-                <span className="truncate text-base">{rider.name}</span>
-                {rider.team && (
-                  <span className="ml-2 text-xs text-text-soft">{rider.team}</span>
-                )}
-              </span>
-              <span
-                className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-display uppercase tracking-wide ${CATEGORY_STYLES[rider.category]}`}
-              >
-                {CATEGORY_LABEL[rider.category]}
-              </span>
-            </button>
-          );
-        })}
-        {filtered.length === 0 && (
+      <div className="mt-5 flex flex-col gap-4">
+        {groups.map(([country, countryRiders]) => (
+          <div key={country}>
+            <h3 className="font-display text-xs uppercase tracking-wide text-verde-deep">
+              {country}
+            </h3>
+            <div className="mt-1.5 flex flex-col gap-1.5">
+              {countryRiders.map((rider) => {
+                const isSelected = selected.has(rider.id);
+                const full =
+                  !isSelected && counts[rider.category] >= SQUAD_REQUIREMENTS[rider.category];
+                return (
+                  <button
+                    key={rider.id}
+                    type="button"
+                    disabled={locked || full}
+                    onClick={() => toggle(rider)}
+                    className={`flex items-center justify-between gap-3 rounded-xl border px-3.5 py-2.5 text-left transition ${
+                      isSelected
+                        ? "border-verde-deep bg-verde-deep/10"
+                        : full || locked
+                        ? "border-line bg-surface opacity-40"
+                        : "border-line bg-surface hover:border-verde-deep/50"
+                    }`}
+                  >
+                    <span className="min-w-0 flex-1 truncate text-base">{rider.name}</span>
+                    <span
+                      className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-display uppercase tracking-wide ${CATEGORY_STYLES[rider.category]}`}
+                    >
+                      {CATEGORY_LABEL[rider.category]}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        ))}
+        {groups.length === 0 && (
           <p className="text-sm text-text-soft">No hay corredores que coincidan.</p>
         )}
       </div>

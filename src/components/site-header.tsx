@@ -1,10 +1,11 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { SessionPayload } from "@/lib/auth";
 import LogoutButton from "@/components/logout-button";
 import MobileNav from "@/components/mobile-nav";
 import Logo from "@/components/logo";
 
-type NavItem = { href: string; label: string };
+type NavItem = { href: string; label: string; icon?: string };
 
 export default function SiteHeader({
   session,
@@ -19,7 +20,7 @@ export default function SiteHeader({
     navItems.push(
       { href: "/mi-equipo", label: "Mi equipo" },
       { href: "/clasificacion", label: "Clasificación" },
-      { href: "/mundial", label: "Mundial" }
+      { href: "/mundial", label: "Mundial", icon: "/mundial-logos/rainbow-flag.png" }
     );
   }
   if (session?.role === "admin" || session?.sanedrin) {
@@ -38,7 +39,7 @@ export default function SiteHeader({
 
         <nav className="hidden items-center gap-1 sm:flex">
           {navItems.map((item) => (
-            <NavLink key={item.href} href={item.href}>
+            <NavLink key={item.href} href={item.href} icon={item.icon}>
               {item.label}
             </NavLink>
           ))}
@@ -70,12 +71,21 @@ function AuthActions({ session }: { session: SessionPayload | null }) {
   );
 }
 
-function NavLink({ href, children }: { href: string; children: React.ReactNode }) {
+function NavLink({
+  href,
+  icon,
+  children,
+}: {
+  href: string;
+  icon?: string;
+  children: React.ReactNode;
+}) {
   return (
     <Link
       href={href}
-      className="rounded-full px-3.5 py-2 font-display text-xs uppercase tracking-wide text-[var(--pill-text)] hover:bg-[var(--pill-bg)]"
+      className="flex items-center gap-1.5 rounded-full px-3.5 py-2 font-display text-xs uppercase tracking-wide text-[var(--pill-text)] hover:bg-[var(--pill-bg)]"
     >
+      {icon && <Image src={icon} alt="" width={16} height={16} className="rounded-full" />}
       {children}
     </Link>
   );

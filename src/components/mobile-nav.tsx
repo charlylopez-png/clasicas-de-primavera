@@ -1,9 +1,10 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
-type NavItem = { href: string; label: string };
+type NavItem = { href: string; label: string; icon?: string };
 
 export default function MobileNav({
   items,
@@ -60,8 +61,11 @@ export default function MobileNav({
               <Link
                 key={item.href}
                 href={item.href}
-                className="py-3.5 font-display text-base uppercase tracking-wide text-text"
+                className="flex items-center gap-2 py-3.5 font-display text-base uppercase tracking-wide text-text"
               >
+                {item.icon && (
+                  <Image src={item.icon} alt="" width={18} height={18} className="rounded-full" />
+                )}
                 {item.label}
               </Link>
             ))}

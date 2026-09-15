@@ -78,3 +78,33 @@ h3,
   letter-spacing: -0.02em;
   line-height: 0.8;
 }
+
+/* ---------------------------------------------------------------
+   Mundial de Montreal — prueba especial, look distinto del resto
+   de la app. Solo sobreescribe fondo/superficies/línea/acento de
+   cabeceras: los colores de categoría (amarillo/rosa/verde) se
+   dejan intactos para que signifiquen lo mismo en todas partes.
+   --------------------------------------------------------------- */
+.mundial-scope {
+  --bg: #12131d;
+  --surface: #1b1d2c;
+  --surface-2: #262842;
+  --bg-app-gradient: linear-gradient(160deg, #12131d 0%, #1a1c2e 55%, #101120 100%);
+  --line: rgba(238, 243, 231, 0.14);
+  --accent-verde-deep: #4fa8e6;
+  --pill-bg: rgba(79, 168, 230, 0.12);
+  background: var(--bg-app-gradient);
+  min-height: 100%;
+}
+
+.mundial-stripe {
+  height: 6px;
+  background: linear-gradient(
+    to right,
+    #007abe 0% 20%,
+    #d92933 20% 40%,
+    #181719 40% 60%,
+    #ffec00 60% 80%,
+    #39a640 80% 100%
+  );
+}

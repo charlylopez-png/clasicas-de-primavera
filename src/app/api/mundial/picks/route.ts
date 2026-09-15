@@ -6,6 +6,7 @@ import { isValidSquad, SQUAD_SIZE, MUNDIAL_SLUG, type RiderCategory } from "@/li
 
 const BodySchema = z.object({
   riderIds: z.array(z.string().uuid()).length(SQUAD_SIZE),
+  teamName: z.string().trim().min(1).max(60),
 });
 
 export async function POST(request: Request) {
@@ -21,7 +22,9 @@ export async function POST(request: Request) {
   const parsed = BodySchema.safeParse(body);
   if (!parsed.success) {
     return NextResponse.json(
-      { error: `El equipo del Mundial debe tener exactamente ${SQUAD_SIZE} corredores.` },
+      {
+        error: `Ponle un nombre a tu equipo y elige exactamente ${SQUAD_SIZE} corredores.`,
+      },
       { status: 400 }
     );
   }
@@ -72,6 +75,12 @@ export async function POST(request: Request) {
     sql`
       insert into special_event_picks (event_id, user_id, rider_id)
       select ${event.id}::uuid, ${session.userId}::uuid, unnest(${riderIds}::uuid[])
+    `,
+    sql`
+      insert into special_event_squads (event_id, user_id, team_name, updated_at)
+      values (${event.id}, ${session.userId}, ${parsed.data.teamName}, now())
+      on conflict (event_id, user_id) do update
+      set team_name = excluded.team_name, updated_at = excluded.updated_at
     `,
   ]);
 

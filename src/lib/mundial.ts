@@ -1,3 +1,4 @@
+import { sql } from "./db";
 import type { RiderCategory } from "./riders";
 export type { RiderCategory };
 
@@ -7,6 +8,28 @@ export type { RiderCategory };
 // mezclan con la general).
 
 export const MUNDIAL_SLUG = "montreal-2026";
+
+export type MundialEvent = {
+  id: string;
+  name: string;
+  event_date: string | Date | null;
+  picks_lock_at: string | Date | null;
+};
+
+// Usado por todas las páginas de /mundial/*: evita repetir la misma
+// consulta en cada page.tsx.
+export async function getMundialEvent(): Promise<MundialEvent | null> {
+  const events = (await sql`
+    select id, name, event_date, picks_lock_at
+    from special_events where slug = ${MUNDIAL_SLUG}
+  `) as MundialEvent[];
+  return events[0] ?? null;
+}
+
+export function isPicksLocked(picksLockAt: string | Date | null) {
+  if (!picksLockAt) return false;
+  return new Date(picksLockAt).getTime() <= Date.now();
+}
 
 export const CATEGORY_MULTIPLIER: Record<RiderCategory, number> = {
   amarillo: 1,

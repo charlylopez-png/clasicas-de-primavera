@@ -24,19 +24,15 @@ export default async function MundialCorredoresPage() {
     : [];
 
   return (
-    <div className="mx-auto max-w-3xl px-5 py-10">
-      <div className="mb-1 flex items-center gap-2 font-display text-[11px] uppercase tracking-[0.16em] text-verde">
-        <span className="h-1.5 w-1.5 rounded-full bg-amarillo" />
-        Mundial de Montreal
-      </div>
-      <h1 className="text-2xl text-verde-deep">Lista cerrada de corredores</h1>
-      <p className="mt-2 max-w-prose text-sm text-text-soft">
+    <section>
+      <h2 className="font-display text-sm text-verde-deep">Lista cerrada de corredores</h2>
+      <p className="mt-1 max-w-prose text-sm text-text-soft">
         Añade aquí a los corredores convocados para el Mundial y clasifícalos
         en Amarillo, Rosa o Verde. Por defecto entran en Verde. Esta lista es
         propia del Mundial: no toca la base de datos de las clásicas.
       </p>
 
       <MundialRidersManager initialRiders={riders} />
-    </div>
+    </section>
   );
 }
