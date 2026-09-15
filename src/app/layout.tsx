@@ -1,8 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import { Oswald, Nunito, Archivo_Black } from "next/font/google";
 import "./globals.css";
-import { getSession } from "@/lib/auth";
+import { getSession, getImpersonationAdmin } from "@/lib/auth";
 import SiteHeader from "@/components/site-header";
+import ImpersonationBar from "@/components/impersonation-bar";
 
 const oswald = Oswald({
   variable: "--font-oswald",
@@ -54,6 +55,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const session = await getSession();
+  const impersonationAdmin = await getImpersonationAdmin();
 
   return (
     <html
@@ -61,6 +63,9 @@ export default async function RootLayout({
       className={`${oswald.variable} ${nunito.variable} ${archivoBlack.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-bg text-text">
+        {impersonationAdmin && session && (
+          <ImpersonationBar actingAsName={session.displayName} />
+        )}
         <SiteHeader session={session} />
         <main className="flex-1">{children}</main>
       </body>

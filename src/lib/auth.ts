@@ -77,3 +77,57 @@ export async function clearSessionCookie() {
   const store = await cookies();
   store.delete(SESSION_COOKIE);
 }
+
+// "Actuar como": deja que el admin entre temporalmente en la sesión de
+// otro jugador (típicamente uno "manual", sin cuenta propia) para hacer
+// por él los mismos pasos que haría cualquiera — Equipo Base, Last Draft,
+// elección del Mundial… — sin tener que construir una pantalla aparte
+// para cada cosa. La sesión de admin no se pierde: se guarda en una
+// segunda cookie mientras dura la suplantación, y "Volver a mi cuenta" la
+// restaura.
+export const IMPERSONATE_COOKIE = "ukt_admin_backup";
+
+export async function startImpersonation(targetPayload: SessionPayload) {
+  const store = await cookies();
+  const adminToken = store.get(SESSION_COOKIE)?.value;
+  if (adminToken) {
+    store.set(IMPERSONATE_COOKIE, adminToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      // Misma duración que una sesión normal: si caducara antes que la
+      // suplantación, el admin se quedaría atrapado en la otra cuenta sin
+      // aviso (la barra de "Actuando como" desaparecería sin más).
+      maxAge: 60 * 60 * 24 * 30,
+    });
+  }
+  await setSessionCookie(targetPayload);
+}
+
+// Devuelve la sesión de admin guardada, o null si no se estaba
+// suplantando a nadie (no toca cookies).
+export async function getImpersonationAdmin(): Promise<SessionPayload | null> {
+  const store = await cookies();
+  const token = store.get(IMPERSONATE_COOKIE)?.value;
+  if (!token) return null;
+  return verifySessionToken(token);
+}
+
+// Restaura la sesión de admin guardada. Devuelve false si no había
+// ninguna que restaurar (por ejemplo, la cookie caducó a las 4h).
+export async function stopImpersonation(): Promise<boolean> {
+  const store = await cookies();
+  const adminToken = store.get(IMPERSONATE_COOKIE)?.value;
+  store.delete(IMPERSONATE_COOKIE);
+  if (!adminToken) return false;
+
+  store.set(SESSION_COOKIE, adminToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/",
+    maxAge: 60 * 60 * 24 * 30,
+  });
+  return true;
+}

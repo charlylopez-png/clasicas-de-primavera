@@ -187,7 +187,17 @@ export default function MundialRidersManager({
         <span className="ml-auto rounded-full border border-line px-3 py-1.5 text-text-soft">
           Total: {riders.length}
         </span>
+        <a
+          href="/api/mundial/riders/export"
+          className="rounded-full border border-line px-3 py-1.5 text-verde-deep hover:border-verde-deep"
+        >
+          ⬇ Descargar listado (CSV)
+        </a>
       </div>
+      <p className="mt-1.5 text-[11px] text-text-faint">
+        El CSV trae país y categoría de cada corredor; en Excel/Sheets puedes
+        reordenarlo por la columna que quieras.
+      </p>
 
       <input
         type="search"

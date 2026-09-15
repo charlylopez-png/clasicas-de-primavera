@@ -1,6 +1,9 @@
 import { sql } from "@/lib/db";
 import UserActions from "@/components/user-actions";
 import SanedrinToggle from "@/components/sanedrin-toggle";
+import ManualPlayerForm from "@/components/manual-player-form";
+import DeleteManualPlayerButton from "@/components/delete-manual-player-button";
+import ImpersonateButton from "@/components/impersonate-button";
 
 type UserRow = {
   id: string;
@@ -9,6 +12,7 @@ type UserRow = {
   status: "pending" | "approved" | "rejected";
   role: "admin" | "participant";
   is_sanedrin: boolean;
+  is_manual: boolean;
   created_at: string;
 };
 
@@ -16,7 +20,7 @@ const SANEDRIN_LIMIT = 3;
 
 export default async function AdminPage() {
   const users = (await sql`
-    select id, email, display_name, status, role, is_sanedrin, created_at
+    select id, email, display_name, status, role, is_sanedrin, is_manual, created_at
     from users
     order by (status = 'pending') desc, created_at desc
   `) as UserRow[];
@@ -36,6 +40,20 @@ export default async function AdminPage() {
         Aprueba o rechaza a quien se apunte a la porra. Solo los aprobados
         pueden elegir equipo y ver la clasificación.
       </p>
+
+      <section className="mt-8">
+        <h2 className="font-display text-sm text-verde-deep">Jugadores manuales</h2>
+        <p className="mt-1 text-xs text-text-soft">
+          Para gente que no va a entrar por su cuenta en la app (mayores con
+          dificultades con la tecnología, por ejemplo): añádelos con solo su
+          nombre, sin cuenta ni contraseña, y usa &quot;Actuar como&quot; más
+          abajo para fichar por ellos en las clásicas o en el Mundial, igual
+          que haría cualquier jugador.
+        </p>
+        <div className="mt-3">
+          <ManualPlayerForm />
+        </div>
+      </section>
 
       <section className="mt-8">
         <h2 className="font-display text-sm text-verde-deep">
@@ -79,10 +97,19 @@ export default async function AdminPage() {
               className="flex items-center justify-between gap-3 rounded-xl border border-line bg-surface p-3"
             >
               <div className="min-w-0">
-                <div className="truncate text-sm font-semibold">{u.display_name}</div>
-                <div className="truncate text-xs text-text-soft">{u.email}</div>
+                <div className="flex items-center gap-2">
+                  <span className="truncate text-sm font-semibold">{u.display_name}</span>
+                  {u.is_manual && (
+                    <span className="shrink-0 rounded-full border border-line px-2 py-0.5 text-[10px] uppercase tracking-wide text-text-soft">
+                      Sin cuenta
+                    </span>
+                  )}
+                </div>
+                <div className="truncate text-xs text-text-soft">
+                  {u.is_manual ? "Gestionado por ti" : u.email}
+                </div>
               </div>
-              <div className="flex shrink-0 items-center gap-2">
+              <div className="flex shrink-0 flex-wrap items-center justify-end gap-2">
                 <span
                   className={`shrink-0 rounded-full px-2.5 py-1 text-[11px] font-semibold ${
                     u.status === "approved"
@@ -94,12 +121,16 @@ export default async function AdminPage() {
                   {u.role === "admin" ? " · Admin" : ""}
                 </span>
                 {u.status === "approved" && u.role !== "admin" && (
-                  <SanedrinToggle
-                    userId={u.id}
-                    isSanedrin={u.is_sanedrin}
-                    disabled={sanedrinCount >= SANEDRIN_LIMIT}
-                  />
+                  <>
+                    <SanedrinToggle
+                      userId={u.id}
+                      isSanedrin={u.is_sanedrin}
+                      disabled={sanedrinCount >= SANEDRIN_LIMIT}
+                    />
+                    <ImpersonateButton userId={u.id} />
+                  </>
                 )}
+                {u.is_manual && <DeleteManualPlayerButton userId={u.id} />}
               </div>
             </div>
           ))}

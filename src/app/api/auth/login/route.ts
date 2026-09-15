@@ -17,12 +17,16 @@ export async function POST(request: Request) {
 
   const normalizedEmail = parsed.data.email.trim().toLowerCase();
   const rows = await sql`
-    select id, email, password_hash, display_name, role, status, is_sanedrin
+    select id, email, password_hash, display_name, role, status, is_sanedrin, is_manual
     from users where email = ${normalizedEmail}
   `;
   const user = rows[0];
 
-  if (!user || !(await verifyPassword(parsed.data.password, user.password_hash))) {
+  if (
+    !user ||
+    user.is_manual ||
+    !(await verifyPassword(parsed.data.password, user.password_hash))
+  ) {
     return NextResponse.json(
       { error: "Email o contraseña incorrectos." },
       { status: 401 }
