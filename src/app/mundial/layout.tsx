@@ -3,6 +3,7 @@ import Image from "next/image";
 import { getSession } from "@/lib/auth";
 import { getMundialEvent, formatEventDate, isPicksLocked } from "@/lib/mundial";
 import MundialSubNav from "@/components/mundial-subnav";
+import MundialLockEditor from "@/components/mundial-lock-editor";
 
 export default async function MundialLayout({ children }: { children: ReactNode }) {
   const session = await getSession();
@@ -54,6 +55,10 @@ export default async function MundialLayout({ children }: { children: ReactNode 
               ? "Los fichajes están cerrados."
               : `Fichajes abiertos hasta ${formatEventDate(event.picks_lock_at)}.`}
           </p>
+        )}
+
+        {session?.role === "admin" && (
+          <MundialLockEditor picksLockAt={event?.picks_lock_at ?? null} />
         )}
 
         <div className="mt-5">
