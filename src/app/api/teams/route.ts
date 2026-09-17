@@ -1,7 +1,12 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getSession } from "@/lib/auth";
-import { createTeam, setActiveTeamCookie, TEAM_NAME_MAX_LEN } from "@/lib/teams";
+import {
+  createTeam,
+  setActiveTeamCookie,
+  DuplicateTeamNameError,
+  TEAM_NAME_MAX_LEN,
+} from "@/lib/teams";
 
 const BodySchema = z.object({
   name: z.string().trim().min(1).max(TEAM_NAME_MAX_LEN),
@@ -28,8 +33,14 @@ export async function POST(request: Request) {
     );
   }
 
-  const team = await createTeam(session.userId, parsed.data.name);
-  await setActiveTeamCookie(team.id);
-
-  return NextResponse.json({ ok: true, team });
+  try {
+    const team = await createTeam(session.userId, parsed.data.name);
+    await setActiveTeamCookie(team.id);
+    return NextResponse.json({ ok: true, team });
+  } catch (err) {
+    if (err instanceof DuplicateTeamNameError) {
+      return NextResponse.json({ error: err.message }, { status: 409 });
+    }
+    throw err;
+  }
 }

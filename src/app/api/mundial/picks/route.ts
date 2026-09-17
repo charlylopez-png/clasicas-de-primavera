@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { sql, transaction } from "@/lib/db";
 import { getSession } from "@/lib/auth";
-import { getActiveTeam } from "@/lib/teams";
+import { getActiveTeam, renameTeam, DuplicateTeamNameError } from "@/lib/teams";
 import { isValidSquad, SQUAD_SIZE, MUNDIAL_SLUG, type RiderCategory } from "@/lib/mundial";
 
 const BodySchema = z.object({
@@ -73,13 +73,21 @@ export async function POST(request: Request) {
 
   const { activeTeam } = await getActiveTeam(session.userId);
 
+  try {
+    await renameTeam(activeTeam.id, session.userId, parsed.data.teamName);
+  } catch (err) {
+    if (err instanceof DuplicateTeamNameError) {
+      return NextResponse.json({ error: err.message }, { status: 409 });
+    }
+    throw err;
+  }
+
   await transaction([
     sql`delete from special_event_picks where event_id = ${event.id} and team_id = ${activeTeam.id}`,
     sql`
       insert into special_event_picks (event_id, team_id, rider_id)
       select ${event.id}::uuid, ${activeTeam.id}::uuid, unnest(${riderIds}::uuid[])
     `,
-    sql`update teams set name = ${parsed.data.teamName} where id = ${activeTeam.id}`,
   ]);
 
   return NextResponse.json({ ok: true });

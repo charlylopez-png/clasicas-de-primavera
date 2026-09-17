@@ -18,6 +18,18 @@ export type Team = {
   user_id: string;
 };
 
+// Cada jugador elige el nombre de cada uno de sus equipos, y tiene que
+// ser distinto de los demás equipos SUYOS (no hace falta que sea único
+// entre jugadores distintos: dos personas pueden llamar a su equipo
+// igual sin problema). Se comprueba a nivel de aplicación para dar un
+// mensaje claro, y además hay un índice único en la base de datos como
+// red de seguridad por si dos peticiones llegan a la vez.
+export class DuplicateTeamNameError extends Error {}
+
+function isUniqueViolation(err: unknown): boolean {
+  return Boolean(err && typeof err === "object" && "code" in err && err.code === "23505");
+}
+
 export async function getUserTeams(userId: string): Promise<Team[]> {
   return (await sql`
     select id, name, user_id
@@ -27,14 +39,52 @@ export async function getUserTeams(userId: string): Promise<Team[]> {
   `) as Team[];
 }
 
+async function assertNameAvailable(userId: string, name: string, excludeTeamId?: string) {
+  const existing = (await sql`
+    select id from teams
+    where user_id = ${userId} and lower(name) = lower(${name})
+      and id <> ${excludeTeamId ?? "00000000-0000-0000-0000-000000000000"}
+  `) as { id: string }[];
+  if (existing.length > 0) {
+    throw new DuplicateTeamNameError(`Ya tienes un equipo llamado "${name}". Elige otro nombre.`);
+  }
+}
+
 export async function createTeam(userId: string, name: string): Promise<Team> {
   const trimmed = name.trim().slice(0, TEAM_NAME_MAX_LEN) || DEFAULT_TEAM_NAME;
-  const [team] = (await sql`
-    insert into teams (user_id, name)
-    values (${userId}, ${trimmed})
-    returning id, name, user_id
-  `) as Team[];
-  return team;
+  await assertNameAvailable(userId, trimmed);
+  try {
+    const [team] = (await sql`
+      insert into teams (user_id, name)
+      values (${userId}, ${trimmed})
+      returning id, name, user_id
+    `) as Team[];
+    return team;
+  } catch (err) {
+    if (isUniqueViolation(err)) {
+      throw new DuplicateTeamNameError(`Ya tienes un equipo llamado "${trimmed}". Elige otro nombre.`);
+    }
+    throw err;
+  }
+}
+
+// Renombra un equipo ya existente (se usa, por ejemplo, al guardar el
+// nombre de equipo desde las pantallas del Mundial).
+export async function renameTeam(
+  teamId: string,
+  userId: string,
+  name: string
+): Promise<void> {
+  const trimmed = name.trim().slice(0, TEAM_NAME_MAX_LEN) || DEFAULT_TEAM_NAME;
+  await assertNameAvailable(userId, trimmed, teamId);
+  try {
+    await sql`update teams set name = ${trimmed} where id = ${teamId} and user_id = ${userId}`;
+  } catch (err) {
+    if (isUniqueViolation(err)) {
+      throw new DuplicateTeamNameError(`Ya tienes un equipo llamado "${trimmed}". Elige otro nombre.`);
+    }
+    throw err;
+  }
 }
 
 // El equipo "activo": el que marca la cookie, si de verdad pertenece a
