@@ -4,6 +4,7 @@ import SanedrinToggle from "@/components/sanedrin-toggle";
 import ManualPlayerForm from "@/components/manual-player-form";
 import DeleteManualPlayerButton from "@/components/delete-manual-player-button";
 import ImpersonateButton from "@/components/impersonate-button";
+import ResetPasswordButton from "@/components/reset-password-button";
 
 type UserRow = {
   id: string;
@@ -128,6 +129,9 @@ export default async function AdminPage() {
                       disabled={sanedrinCount >= SANEDRIN_LIMIT}
                     />
                     <ImpersonateButton userId={u.id} />
+                    {!u.is_manual && (
+                      <ResetPasswordButton userId={u.id} displayName={u.display_name} />
+                    )}
                   </>
                 )}
                 {u.is_manual && <DeleteManualPlayerButton userId={u.id} />}

@@ -1,4 +1,5 @@
 import bcrypt from "bcryptjs";
+import { randomInt } from "crypto";
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 
@@ -33,6 +34,21 @@ export async function hashPassword(password: string) {
 
 export async function verifyPassword(password: string, hash: string) {
   return bcrypt.compare(password, hash);
+}
+
+// Para "Restablecer contraseña" desde /admin: una contraseña nueva y
+// legible (sin caracteres que se confunden fácilmente al dictarla o
+// pasarla por WhatsApp: sin 0/O, 1/l/I). Se genera aquí y solo se
+// muestra una vez en el momento de crearla — no se guarda en ningún
+// sitio en texto plano, solo su hash.
+const PASSWORD_CHARS = "ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789";
+
+export function generateRandomPassword(length = 10) {
+  let out = "";
+  for (let i = 0; i < length; i++) {
+    out += PASSWORD_CHARS[randomInt(PASSWORD_CHARS.length)];
+  }
+  return out;
 }
 
 export async function createSessionToken(payload: SessionPayload) {
