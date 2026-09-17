@@ -4,8 +4,9 @@ import { getSession } from "@/lib/auth";
 
 // Solo borra si is_manual = true, para que este endpoint no pueda usarse
 // nunca para eliminar una cuenta real por error. El borrado en cascada ya
-// existente (special_event_picks/squads referencian users con ON DELETE
-// CASCADE) limpia también su ficha y su equipo del Mundial.
+// existente (teams referencia users, y team_base/team_last_draft/
+// special_event_picks referencian teams, todo con ON DELETE CASCADE)
+// limpia también sus equipos, sus fichajes y su elección del Mundial.
 export async function DELETE(
   _request: Request,
   { params }: { params: Promise<{ id: string }> }

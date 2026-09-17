@@ -1,10 +1,12 @@
 import Link from "next/link";
 import { getSession } from "@/lib/auth";
 import { sql } from "@/lib/db";
+import { getActiveTeam } from "@/lib/teams";
 import { getMundialEvent, isPicksLocked, pointsForPosition } from "@/lib/mundial";
 import MundialTeamEditor, {
   type MundialRider,
 } from "@/components/mundial-team-editor";
+import TeamSwitcher from "@/components/team-switcher";
 
 type PickRow = {
   rider_id: string;
@@ -26,12 +28,7 @@ export default async function MundialEquipoPage() {
   }
 
   const locked = isPicksLocked(event.picks_lock_at);
-
-  const squads = await sql`
-    select team_name from special_event_squads
-    where event_id = ${event.id} and user_id = ${session.userId}
-  `;
-  const teamName = squads[0]?.team_name as string | undefined;
+  const { teams, activeTeam } = await getActiveTeam(session.userId);
 
   const riders = (await sql`
     select id, name, team, category
@@ -46,7 +43,7 @@ export default async function MundialEquipoPage() {
     join special_event_riders r on r.id = p.rider_id
     left join special_event_results res
       on res.event_id = p.event_id and res.rider_id = p.rider_id
-    where p.event_id = ${event.id} and p.user_id = ${session.userId}
+    where p.event_id = ${event.id} and p.team_id = ${activeTeam.id}
   `) as PickRow[];
 
   const total = picks.reduce(
@@ -58,8 +55,12 @@ export default async function MundialEquipoPage() {
     <section>
       <h2 className="font-display text-sm text-verde-deep">Mi equipo</h2>
 
+      <div className="mt-4">
+        <TeamSwitcher teams={teams} activeTeamId={activeTeam.id} />
+      </div>
+
       {picks.length === 0 ? (
-        <div className="mt-4 rounded-2xl border border-dashed border-line bg-surface p-6 text-center text-sm text-text-soft">
+        <div className="rounded-2xl border border-dashed border-line bg-surface p-6 text-center text-sm text-text-soft">
           Todavía no has fichado a nadie.{" "}
           <Link href="/mundial/eleccion" className="text-verde-deep underline">
             Elige tu equipo
@@ -67,7 +68,7 @@ export default async function MundialEquipoPage() {
           .
         </div>
       ) : (
-        <div className="mt-4 rounded-2xl bg-surface p-4">
+        <div className="rounded-2xl bg-surface p-4">
           <div className="flex items-center justify-between gap-3">
             <p className="text-xs text-text-soft">{session.displayName}</p>
             <span className="font-display text-lg text-amarillo">
@@ -77,9 +78,10 @@ export default async function MundialEquipoPage() {
 
           <div className="mt-4">
             <MundialTeamEditor
+              key={activeTeam.id}
               riders={riders}
               initialSelectedIds={picks.map((p) => p.rider_id)}
-              initialTeamName={teamName ?? ""}
+              initialTeamName={activeTeam.name}
               locked={locked}
             />
           </div>

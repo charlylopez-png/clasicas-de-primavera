@@ -1,16 +1,17 @@
 import { sql } from "@/lib/db";
 import { getSession } from "@/lib/auth";
+import { getUserTeams } from "@/lib/teams";
 import { getMundialEvent, isPicksLocked, pointsForPosition } from "@/lib/mundial";
 import CountryFlag from "@/components/country-flag";
 
 type SquadRow = {
-  user_id: string;
+  team_id: string;
   display_name: string;
-  team_name: string | null;
+  team_name: string;
 };
 
 type PickRow = {
-  user_id: string;
+  team_id: string;
   rider_name: string;
   team: string | null;
   multiplier: string;
@@ -32,17 +33,22 @@ export default async function MundialClasificacionPage() {
 
   const locked = isPicksLocked(event.picks_lock_at);
 
+  // Un jugador puede tener varios equipos, y cada uno cuenta como una
+  // entrada independiente en esta clasificación (no hay tabla de
+  // "squads" del Mundial: basta con los equipos que ya tienen algún
+  // fichaje guardado para este evento).
   const squadRows = (await sql`
-    select s.user_id, u.display_name, s.team_name
-    from special_event_squads s
-    join users u on u.id = s.user_id
-    where s.event_id = ${event.id}
+    select distinct t.id as team_id, t.name as team_name, u.display_name
+    from special_event_picks p
+    join teams t on t.id = p.team_id
+    join users u on u.id = t.user_id
+    where p.event_id = ${event.id}
     order by u.display_name
   `) as SquadRow[];
 
   const pickRows = (await sql`
     select
-      p.user_id,
+      p.team_id,
       r.name as rider_name,
       r.team,
       r.multiplier,
@@ -54,21 +60,25 @@ export default async function MundialClasificacionPage() {
     where p.event_id = ${event.id}
   `) as PickRow[];
 
-  const picksByUser = new Map<string, PickRow[]>();
+  const picksByTeam = new Map<string, PickRow[]>();
   for (const row of pickRows) {
-    if (!picksByUser.has(row.user_id)) picksByUser.set(row.user_id, []);
-    picksByUser.get(row.user_id)!.push(row);
+    if (!picksByTeam.has(row.team_id)) picksByTeam.set(row.team_id, []);
+    picksByTeam.get(row.team_id)!.push(row);
   }
+
+  // Todos los equipos propios (no solo el activo ahora mismo) se
+  // consideran "míos" a efectos de ver los corredores antes del cierre.
+  const myTeamIds = new Set((await getUserTeams(session.userId)).map((t) => t.id));
 
   const standings = squadRows
     .map((s) => {
-      const picks = picksByUser.get(s.user_id) ?? [];
+      const picks = picksByTeam.get(s.team_id) ?? [];
       const total = picks.reduce(
         (sum, p) => sum + pointsForPosition(p.position) * Number(p.multiplier),
         0
       );
       return {
-        userId: s.user_id,
+        teamId: s.team_id,
         displayName: s.display_name,
         teamName: s.team_name || "(sin nombre)",
         total,
@@ -93,10 +103,10 @@ export default async function MundialClasificacionPage() {
 
       <div className="mt-6 flex flex-col gap-3">
         {standings.map((s, i) => {
-          const revealed = locked || s.userId === session.userId;
+          const revealed = locked || myTeamIds.has(s.teamId);
           return (
             <div
-              key={s.userId}
+              key={s.teamId}
               className="rounded-2xl border border-line bg-surface p-4"
             >
               <div className="flex items-center justify-between gap-3">

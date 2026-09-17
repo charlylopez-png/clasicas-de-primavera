@@ -1,8 +1,10 @@
 import { getSession } from "@/lib/auth";
 import { sql } from "@/lib/db";
+import { getActiveTeam } from "@/lib/teams";
 import MundialSquadSelector, {
   type MundialRider,
 } from "@/components/mundial-squad-selector";
+import TeamSwitcher from "@/components/team-switcher";
 import { getMundialEvent, isPicksLocked } from "@/lib/mundial";
 
 export default async function MundialEleccionPage() {
@@ -19,6 +21,7 @@ export default async function MundialEleccionPage() {
   }
 
   const locked = isPicksLocked(event.picks_lock_at);
+  const { teams, activeTeam } = await getActiveTeam(session.userId);
 
   const riders = (await sql`
     select id, name, team, category
@@ -29,13 +32,8 @@ export default async function MundialEleccionPage() {
 
   const picks = (await sql`
     select rider_id from special_event_picks
-    where event_id = ${event.id} and user_id = ${session.userId}
+    where event_id = ${event.id} and team_id = ${activeTeam.id}
   `) as { rider_id: string }[];
-
-  const squads = (await sql`
-    select team_name from special_event_squads
-    where event_id = ${event.id} and user_id = ${session.userId}
-  `) as { team_name: string }[];
 
   return (
     <section>
@@ -47,15 +45,17 @@ export default async function MundialEleccionPage() {
       </p>
 
       <div className="mt-4 rounded-2xl bg-surface p-4">
+        <TeamSwitcher teams={teams} activeTeamId={activeTeam.id} />
         {riders.length === 0 ? (
           <p className="text-sm text-text-soft">
             Todavía no hay lista de corredores para esta prueba.
           </p>
         ) : (
           <MundialSquadSelector
+            key={activeTeam.id}
             riders={riders}
             initialSelectedIds={picks.map((p) => p.rider_id)}
-            initialTeamName={squads[0]?.team_name ?? ""}
+            initialTeamName={activeTeam.name}
             locked={locked}
           />
         )}

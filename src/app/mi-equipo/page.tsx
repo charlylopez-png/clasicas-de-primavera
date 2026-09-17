@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { sql } from "@/lib/db";
 import { getSession } from "@/lib/auth";
+import { getActiveTeam } from "@/lib/teams";
 import SquadSelector, { type SelectableRider } from "@/components/squad-selector";
+import TeamSwitcher from "@/components/team-switcher";
 import type { RiderCategory } from "@/lib/riders";
 
 type RaceRow = {
@@ -19,6 +21,8 @@ export default async function MiEquipoPage() {
   const session = await getSession();
   if (!session) return null; // el proxy ya redirige a /login antes de llegar aquí
 
+  const { teams, activeTeam } = await getActiveTeam(session.userId);
+
   const riders = (await sql`
     select id, name, team, division, category
     from riders
@@ -26,7 +30,7 @@ export default async function MiEquipoPage() {
   `) as SelectableRider[];
 
   const teamBase = (await sql`
-    select rider_id from team_base where user_id = ${session.userId}
+    select rider_id from team_base where team_id = ${activeTeam.id}
   `) as { rider_id: string }[];
 
   const races = (await sql`
@@ -38,7 +42,7 @@ export default async function MiEquipoPage() {
     from team_last_draft tld
     join races r on r.id = tld.race_id
     join riders ri on ri.id = tld.rider_id
-    where tld.user_id = ${session.userId}
+    where tld.team_id = ${activeTeam.id}
     order by r.order_num, ri.category
   `) as DraftPick[];
 
@@ -58,6 +62,10 @@ export default async function MiEquipoPage() {
         Hola, {session.displayName}
       </h1>
 
+      <div className="mt-4">
+        <TeamSwitcher teams={teams} activeTeamId={activeTeam.id} />
+      </div>
+
       <section className="mt-8">
         <h2 className="font-display text-sm text-verde-deep">Equipo Base</h2>
         <p className="mt-1 text-sm text-text-soft">
@@ -67,6 +75,7 @@ export default async function MiEquipoPage() {
         </p>
         <div className="mt-4 rounded-2xl bg-surface p-4">
           <SquadSelector
+            key={activeTeam.id}
             riders={riders}
             initialSelectedIds={teamBase.map((r) => r.rider_id)}
             saveUrl="/api/team-base"
@@ -114,4 +123,3 @@ export default async function MiEquipoPage() {
     </div>
   );
 }
-

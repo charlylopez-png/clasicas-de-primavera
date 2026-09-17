@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { sql, transaction } from "@/lib/db";
 import { getSession } from "@/lib/auth";
+import { getActiveTeam } from "@/lib/teams";
 import { isValidSquad, SQUAD_SIZE, MUNDIAL_SLUG, type RiderCategory } from "@/lib/mundial";
 
 const BodySchema = z.object({
@@ -70,18 +71,15 @@ export async function POST(request: Request) {
     );
   }
 
+  const { activeTeam } = await getActiveTeam(session.userId);
+
   await transaction([
-    sql`delete from special_event_picks where event_id = ${event.id} and user_id = ${session.userId}`,
+    sql`delete from special_event_picks where event_id = ${event.id} and team_id = ${activeTeam.id}`,
     sql`
-      insert into special_event_picks (event_id, user_id, rider_id)
-      select ${event.id}::uuid, ${session.userId}::uuid, unnest(${riderIds}::uuid[])
+      insert into special_event_picks (event_id, team_id, rider_id)
+      select ${event.id}::uuid, ${activeTeam.id}::uuid, unnest(${riderIds}::uuid[])
     `,
-    sql`
-      insert into special_event_squads (event_id, user_id, team_name, updated_at)
-      values (${event.id}, ${session.userId}, ${parsed.data.teamName}, now())
-      on conflict (event_id, user_id) do update
-      set team_name = excluded.team_name, updated_at = excluded.updated_at
-    `,
+    sql`update teams set name = ${parsed.data.teamName} where id = ${activeTeam.id}`,
   ]);
 
   return NextResponse.json({ ok: true });

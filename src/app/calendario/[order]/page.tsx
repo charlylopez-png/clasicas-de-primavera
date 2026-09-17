@@ -3,8 +3,10 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { sql } from "@/lib/db";
 import { getSession } from "@/lib/auth";
+import { getActiveTeam } from "@/lib/teams";
 import { formatCoefficient, formatRaceDate } from "@/lib/riders";
 import SquadSelector, { type SelectableRider } from "@/components/squad-selector";
+import TeamSwitcher from "@/components/team-switcher";
 
 type Race = {
   id: string;
@@ -55,7 +57,13 @@ export default async function RaceDetailPage({
 
   let riders: SelectableRider[] = [];
   let initialSelectedIds: string[] = [];
+  let teams: { id: string; name: string }[] = [];
+  let activeTeamId = "";
   if (canDraft && session) {
+    const active = await getActiveTeam(session.userId);
+    teams = active.teams;
+    activeTeamId = active.activeTeam.id;
+
     riders = (await sql`
       select id, name, team, division, category
       from riders
@@ -63,7 +71,7 @@ export default async function RaceDetailPage({
     `) as SelectableRider[];
     const picks = (await sql`
       select rider_id from team_last_draft
-      where user_id = ${session.userId} and race_id = ${race.id}
+      where team_id = ${activeTeamId} and race_id = ${race.id}
     `) as { rider_id: string }[];
     initialSelectedIds = picks.map((p) => p.rider_id);
   }
@@ -199,7 +207,9 @@ export default async function RaceDetailPage({
 
         {canDraft ? (
           <div className="mt-4 rounded-2xl bg-surface p-4">
+            <TeamSwitcher teams={teams} activeTeamId={activeTeamId} />
             <SquadSelector
+              key={activeTeamId}
               riders={riders}
               initialSelectedIds={initialSelectedIds}
               saveUrl={`/api/races/${race.id}/draft`}

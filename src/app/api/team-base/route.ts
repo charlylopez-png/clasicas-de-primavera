@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { sql, transaction } from "@/lib/db";
 import { getSession } from "@/lib/auth";
+import { getActiveTeam } from "@/lib/teams";
 import { isValidSquad, SQUAD_SIZE, type RiderCategory } from "@/lib/riders";
 
 const BodySchema = z.object({
@@ -52,11 +53,13 @@ export async function POST(request: Request) {
     );
   }
 
+  const { activeTeam } = await getActiveTeam(session.userId);
+
   await transaction([
-    sql`delete from team_base where user_id = ${session.userId}`,
+    sql`delete from team_base where team_id = ${activeTeam.id}`,
     sql`
-      insert into team_base (user_id, rider_id)
-      select ${session.userId}::uuid, unnest(${riderIds}::uuid[])
+      insert into team_base (team_id, rider_id)
+      select ${activeTeam.id}::uuid, unnest(${riderIds}::uuid[])
     `,
   ]);
 
