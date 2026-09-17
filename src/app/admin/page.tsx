@@ -67,11 +67,11 @@ export default async function AdminPage() {
             {pending.map((u) => (
               <div
                 key={u.id}
-                className="flex items-center justify-between gap-3 rounded-xl border border-line bg-surface p-3"
+                className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-line bg-surface p-3"
               >
                 <div className="min-w-0">
-                  <div className="truncate text-sm font-semibold">{u.display_name}</div>
-                  <div className="truncate text-xs text-text-soft">{u.email}</div>
+                  <div className="truncate text-base font-semibold">{u.display_name}</div>
+                  <div className="truncate text-sm text-text-soft">{u.email}</div>
                 </div>
                 <UserActions userId={u.id} />
               </div>
@@ -95,22 +95,22 @@ export default async function AdminPage() {
           {resolved.map((u) => (
             <div
               key={u.id}
-              className="flex items-center justify-between gap-3 rounded-xl border border-line bg-surface p-3"
+              className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-line bg-surface p-3"
             >
               <div className="min-w-0">
-                <div className="flex items-center gap-2">
-                  <span className="truncate text-sm font-semibold">{u.display_name}</span>
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="truncate text-base font-semibold">{u.display_name}</span>
                   {u.is_manual && (
                     <span className="shrink-0 rounded-full border border-line px-2 py-0.5 text-[10px] uppercase tracking-wide text-text-soft">
                       Sin cuenta
                     </span>
                   )}
                 </div>
-                <div className="truncate text-xs text-text-soft">
+                <div className="truncate text-sm text-text-soft">
                   {u.is_manual ? "Gestionado por ti" : u.email}
                 </div>
               </div>
-              <div className="flex shrink-0 flex-wrap items-center justify-end gap-2">
+              <div className="flex w-full flex-wrap items-center justify-end gap-2 sm:w-auto sm:shrink-0">
                 <span
                   className={`shrink-0 rounded-full px-2.5 py-1 text-[11px] font-semibold ${
                     u.status === "approved"

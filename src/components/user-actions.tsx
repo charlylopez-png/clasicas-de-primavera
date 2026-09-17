@@ -19,12 +19,12 @@ export default function UserActions({ userId }: { userId: string }) {
   }
 
   return (
-    <div className="flex shrink-0 gap-2">
+    <div className="flex w-full flex-wrap justify-end gap-2 sm:w-auto sm:shrink-0">
       <button
         type="button"
         disabled={isPending}
         onClick={() => act("approve")}
-        className="rounded-full bg-amarillo px-3 py-1.5 font-display text-[11px] uppercase tracking-wide text-on-accent hover:bg-gold disabled:opacity-50"
+        className="rounded-full bg-amarillo px-3.5 py-2 font-display text-xs uppercase tracking-wide text-on-accent hover:bg-gold disabled:opacity-50"
       >
         Aprobar
       </button>
@@ -32,7 +32,7 @@ export default function UserActions({ userId }: { userId: string }) {
         type="button"
         disabled={isPending}
         onClick={() => act("reject")}
-        className="rounded-full border border-rosa px-3 py-1.5 font-display text-[11px] uppercase tracking-wide text-rosa disabled:opacity-50"
+        className="rounded-full border border-rosa px-3.5 py-2 font-display text-xs uppercase tracking-wide text-rosa disabled:opacity-50"
       >
         Rechazar
       </button>

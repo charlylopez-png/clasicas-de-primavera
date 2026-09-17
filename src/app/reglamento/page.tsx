@@ -184,7 +184,7 @@ function RuleCard({
     <div className={`rounded-2xl border-t-4 bg-surface p-4 ${borderColor}`}>
       <div className="font-display text-[11px] text-text-soft">{n}</div>
       <h3 className="mt-1 text-base text-verde-deep">{title}</h3>
-      <p className="mt-1.5 text-[13px] leading-relaxed text-text-soft">
+      <p className="mt-1.5 text-sm leading-relaxed text-text-soft">
         {children}
       </p>
     </div>
@@ -193,7 +193,7 @@ function RuleCard({
 
 function Example({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="rounded-xl bg-white/5 p-3 text-[13px] leading-relaxed">
+    <div className="rounded-xl bg-white/5 p-3 text-sm leading-relaxed">
       <b className="text-amarillo">{title}.</b> {children}
     </div>
   );
@@ -216,7 +216,7 @@ function CategoryCard({
         <span className="font-display text-base font-bold">{name}</span>
         <span className="font-display text-xl font-bold">{mult}</span>
       </div>
-      <p className="mt-1.5 text-[13px] leading-relaxed">{children}</p>
+      <p className="mt-1.5 text-sm leading-relaxed">{children}</p>
     </div>
   );
 }

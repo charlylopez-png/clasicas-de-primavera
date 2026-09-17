@@ -118,10 +118,10 @@ export default function RidersManager({ initialRiders }: { initialRiders: Rider[
               {teamRiders.map((rider) => (
                 <div
                   key={rider.id}
-                  className="flex items-center justify-between gap-3 rounded-xl border border-line bg-surface px-3.5 py-2.5"
+                  className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-line bg-surface px-3.5 py-2.5"
                 >
                   <span className="min-w-0 truncate text-base">{rider.name}</span>
-                  <div className="flex shrink-0 gap-1.5">
+                  <div className="flex w-full flex-wrap justify-end gap-2 sm:w-auto sm:shrink-0">
                     {CATEGORIES.map((c) => (
                       <button
                         key={c}
@@ -130,7 +130,7 @@ export default function RidersManager({ initialRiders }: { initialRiders: Rider[
                         onClick={() => setCategory(rider.id, c)}
                         aria-pressed={rider.category === c}
                         title={CATEGORY_LABEL[c]}
-                        className={`h-8 w-8 rounded-full border-2 transition ${
+                        className={`h-9 w-9 rounded-full border-2 transition ${
                           rider.category === c
                             ? `${CATEGORY_STYLES[c]} border-transparent`
                             : "border-line bg-transparent opacity-40 hover:opacity-70"

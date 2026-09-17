@@ -76,7 +76,7 @@ export default function TeamSwitcher({
             disabled={isPending}
             onClick={() => switchTo(team.id)}
             aria-pressed={team.id === activeTeamId}
-            className={`rounded-full px-3 py-1.5 text-xs font-semibold transition disabled:opacity-50 ${
+            className={`rounded-full px-3.5 py-2 text-sm font-semibold transition disabled:opacity-50 ${
               team.id === activeTeamId
                 ? "bg-verde-deep text-on-accent"
                 : "border border-line bg-surface text-text-soft hover:border-verde-deep/50"
@@ -87,7 +87,7 @@ export default function TeamSwitcher({
         ))}
 
         {creating ? (
-          <div className="flex items-center gap-1.5">
+          <div className="flex w-full flex-wrap items-center gap-1.5">
             <input
               type="text"
               autoFocus
@@ -102,13 +102,13 @@ export default function TeamSwitcher({
               }}
               maxLength={60}
               placeholder="Nombre del equipo nuevo"
-              className="rounded-full border border-line bg-surface px-3 py-1.5 text-xs outline-none focus:border-verde"
+              className="min-w-0 flex-1 rounded-full border border-line bg-surface px-3 py-2 text-sm outline-none focus:border-verde"
             />
             <button
               type="button"
               disabled={!newName.trim() || isPending}
               onClick={createTeam}
-              className="rounded-full bg-amarillo px-3 py-1.5 text-xs font-semibold text-on-accent disabled:opacity-40"
+              className="rounded-full bg-amarillo px-3.5 py-2 text-sm font-semibold text-on-accent disabled:opacity-40"
             >
               Crear
             </button>
@@ -118,7 +118,7 @@ export default function TeamSwitcher({
                 setCreating(false);
                 setNewName("");
               }}
-              className="text-xs text-text-soft underline underline-offset-2"
+              className="rounded-full px-2.5 py-2 text-sm text-text-soft underline underline-offset-2"
             >
               Cancelar
             </button>
@@ -127,7 +127,7 @@ export default function TeamSwitcher({
           <button
             type="button"
             onClick={() => setCreating(true)}
-            className="rounded-full border border-dashed border-line px-3 py-1.5 text-xs text-verde-deep hover:border-verde-deep"
+            className="rounded-full border border-dashed border-line px-3.5 py-2 text-sm text-verde-deep hover:border-verde-deep"
           >
             + Nuevo equipo
           </button>

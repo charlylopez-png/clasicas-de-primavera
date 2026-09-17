@@ -179,7 +179,7 @@ export default function MundialTeamEditor({
             <div key={cat} className="rounded-2xl border border-line bg-surface p-3.5">
               <div className="flex items-center justify-between gap-2">
                 <span
-                  className={`rounded-full px-3 py-1.5 font-display text-xs uppercase tracking-wide ${
+                  className={`rounded-full px-3 py-1.5 font-display text-sm uppercase tracking-wide ${
                     ok ? CATEGORY_STYLES[cat] : "border border-rosa text-rosa"
                   }`}
                 >

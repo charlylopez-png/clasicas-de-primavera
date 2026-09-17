@@ -132,7 +132,7 @@ export default async function RaceDetailPage({
           <h2 className="font-display text-xs uppercase tracking-wide text-verde-deep">
             Perfil de la carrera
           </h2>
-          <p className="mt-1.5 text-[13px] leading-relaxed text-text-soft">
+          <p className="mt-1.5 text-sm leading-relaxed text-text-soft">
             Pendiente de añadir (recorrido, desnivel, tipo de llegada…).
           </p>
         </div>
@@ -140,7 +140,7 @@ export default async function RaceDetailPage({
           <h2 className="font-display text-xs uppercase tracking-wide text-verde-deep">
             Participantes
           </h2>
-          <p className="mt-1.5 text-[13px] leading-relaxed text-text-soft">
+          <p className="mt-1.5 text-sm leading-relaxed text-text-soft">
             Pendiente de añadir el pelotón inscrito en esta carrera.
           </p>
         </div>

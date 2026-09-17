@@ -152,7 +152,7 @@ export default function MundialSquadSelector({
         {CATEGORIES.map((c) => (
           <span
             key={c}
-            className={`rounded-full px-3 py-1.5 font-display text-xs uppercase tracking-wide ${
+            className={`rounded-full px-3 py-1.5 font-display text-sm uppercase tracking-wide ${
               counts[c] === SQUAD_REQUIREMENTS[c]
                 ? CATEGORY_STYLES[c]
                 : "border border-line bg-transparent text-text-soft"

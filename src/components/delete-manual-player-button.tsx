@@ -23,7 +23,7 @@ export default function DeleteManualPlayerButton({ userId }: { userId: string })
       disabled={isPending}
       onClick={remove}
       title="Quitar jugador manual"
-      className="h-7 w-7 shrink-0 rounded-full border border-line text-text-soft hover:border-rosa hover:text-rosa disabled:opacity-50"
+      className="h-9 w-9 shrink-0 rounded-full border border-line text-text-soft hover:border-rosa hover:text-rosa disabled:opacity-50"
     >
       ×
     </button>

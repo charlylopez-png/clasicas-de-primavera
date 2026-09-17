@@ -285,7 +285,7 @@ export default function MundialRidersManager({
                   </div>
                 </div>
               ) : (
-                <div className="flex items-center justify-between gap-3">
+                <div className="flex flex-wrap items-center justify-between gap-3">
                   <span className="min-w-0 flex-1 truncate">
                     <CountryFlag team={rider.team} className="mr-1.5" />
                     <span className="truncate text-base">{rider.name}</span>
@@ -293,7 +293,7 @@ export default function MundialRidersManager({
                       <span className="ml-2 text-xs text-text-soft">{rider.team}</span>
                     )}
                   </span>
-                  <div className="flex shrink-0 items-center gap-1.5">
+                  <div className="flex w-full flex-wrap items-center justify-end gap-2 sm:w-auto sm:shrink-0">
                     {CATEGORIES.map((c) => (
                       <button
                         key={c}
@@ -302,7 +302,7 @@ export default function MundialRidersManager({
                         onClick={() => setCategory(rider.id, c)}
                         aria-pressed={rider.category === c}
                         title={CATEGORY_LABEL[c]}
-                        className={`h-8 w-8 rounded-full border-2 transition ${
+                        className={`h-9 w-9 rounded-full border-2 transition ${
                           rider.category === c
                             ? `${CATEGORY_STYLES[c]} border-transparent`
                             : "border-line bg-transparent opacity-40 hover:opacity-70"
@@ -313,7 +313,7 @@ export default function MundialRidersManager({
                       type="button"
                       onClick={() => startEdit(rider)}
                       title="Editar nombre/país"
-                      className="ml-1 h-8 w-8 rounded-full border border-line text-text-soft hover:border-verde-deep hover:text-verde-deep"
+                      className="ml-1 h-9 w-9 rounded-full border border-line text-text-soft hover:border-verde-deep hover:text-verde-deep"
                     >
                       ✎
                     </button>
@@ -321,7 +321,7 @@ export default function MundialRidersManager({
                       type="button"
                       onClick={() => removeRider(rider.id)}
                       title="Eliminar"
-                      className="h-8 w-8 rounded-full border border-line text-text-soft hover:border-rosa hover:text-rosa"
+                      className="h-9 w-9 rounded-full border border-line text-text-soft hover:border-rosa hover:text-rosa"
                     >
                       ×
                     </button>
