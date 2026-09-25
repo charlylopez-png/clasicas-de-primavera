@@ -12,6 +12,7 @@ const ITEMS = [
 
 const ADMIN_ITEMS = [
   { href: "/mundial/corredores", label: "Corredores" },
+  { href: "/mundial/equipos", label: "Equipos" },
   { href: "/mundial/resultados", label: "Resultados" },
 ];
 
