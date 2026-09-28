@@ -7,6 +7,7 @@ const ITEMS = [
   { href: "/mundial/eleccion", label: "Elección de equipo" },
   { href: "/mundial/equipo", label: "Mi equipo" },
   { href: "/mundial/clasificacion", label: "Clasificación" },
+  { href: "/mundial/data", label: "Data" },
   { href: "/mundial/perfil", label: "Perfil y mapa" },
 ];
 
