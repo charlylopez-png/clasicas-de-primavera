@@ -20,7 +20,8 @@ export default function SiteHeader({
     navItems.push(
       { href: "/mi-equipo", label: "Mi equipo" },
       { href: "/clasificacion", label: "Clasificación" },
-      { href: "/mundial", label: "Mundial", icon: "/mundial-logos/rainbow-flag.png" }
+      { href: "/mundial", label: "Mundial", icon: "/mundial-logos/rainbow-flag.png" },
+      { href: "/europeo", label: "Europeo", icon: "/europeo-logos/icon.png" }
     );
   }
   if (session?.role === "admin" || session?.sanedrin) {

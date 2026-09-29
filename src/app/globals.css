@@ -109,3 +109,25 @@ h3,
     #39a640 80% 100%
   );
 }
+
+/* ---------------------------------------------------------------
+   Europeo de Ljubljana — misma idea que el Mundial (look distinto,
+   colores de categoría intactos), pero con su propio acento (azul UEC)
+   para distinguirlo de un vistazo del Mundial.
+   --------------------------------------------------------------- */
+.europeo-scope {
+  --bg: #12131d;
+  --surface: #1b1d2c;
+  --surface-2: #262842;
+  --bg-app-gradient: linear-gradient(160deg, #12131d 0%, #1a1c2e 55%, #101120 100%);
+  --line: rgba(238, 243, 231, 0.14);
+  --accent-verde-deep: #ffcc00;
+  --pill-bg: rgba(255, 204, 0, 0.12);
+  background: var(--bg-app-gradient);
+  min-height: 100%;
+}
+
+.europeo-stripe {
+  height: 6px;
+  background: linear-gradient(to right, #003399 0% 50%, #ffcc00 50% 100%);
+}
