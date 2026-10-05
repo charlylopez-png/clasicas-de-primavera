@@ -131,3 +131,25 @@ h3,
   height: 6px;
   background: linear-gradient(to right, #003399 0% 50%, #ffcc00 50% 100%);
 }
+
+/* ---------------------------------------------------------------
+   Il Lombardia — misma idea que el Mundial y el Europeo (look distinto,
+   colores de categoría intactos), con su propio acento (verde del logo
+   de la carrera sobre fondo azul noche).
+   --------------------------------------------------------------- */
+.lombardia-scope {
+  --bg: #0f1a24;
+  --surface: #172531;
+  --surface-2: #213647;
+  --bg-app-gradient: linear-gradient(160deg, #0f1a24 0%, #15222f 55%, #0c1620 100%);
+  --line: rgba(238, 243, 231, 0.14);
+  --accent-verde-deep: #6fd0a0;
+  --pill-bg: rgba(111, 208, 160, 0.12);
+  background: var(--bg-app-gradient);
+  min-height: 100%;
+}
+
+.lombardia-stripe {
+  height: 6px;
+  background: linear-gradient(to right, #2c4a7a 0% 50%, #50b57c 50% 100%);
+}

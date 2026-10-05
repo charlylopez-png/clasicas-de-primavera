@@ -3,6 +3,7 @@ import Logo from "@/components/logo";
 import CobbleBackground from "@/components/cobble-background";
 import MundialHomeBanner from "@/components/mundial-home-banner";
 import EuropeoHomeBanner from "@/components/europeo-home-banner";
+import LombardiaHomeBanner from "@/components/lombardia-home-banner";
 
 export default function Home() {
   return (
@@ -55,6 +56,7 @@ export default function Home() {
       </section>
 
       <section className="mx-auto max-w-3xl px-5 py-12">
+        <LombardiaHomeBanner />
         <EuropeoHomeBanner />
         <MundialHomeBanner />
         <div className="grid gap-4 sm:grid-cols-3">
