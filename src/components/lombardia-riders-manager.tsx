@@ -50,6 +50,21 @@ export default function LombardiaRidersManager({
     });
   }, [riders, query, categoryFilter]);
 
+  // Agrupados por equipo (orden alfabético de equipos y, dentro de cada
+  // equipo, de corredores), en vez de una sola lista alfabética.
+  const grouped = useMemo(() => {
+    const byTeam = new Map<string, LombardiaAdminRider[]>();
+    for (const r of filtered) {
+      const key = r.team ?? "Sin equipo";
+      if (!byTeam.has(key)) byTeam.set(key, []);
+      byTeam.get(key)!.push(r);
+    }
+    for (const list of byTeam.values()) {
+      list.sort((a, b) => a.name.localeCompare(b.name));
+    }
+    return Array.from(byTeam.entries()).sort((a, b) => a[0].localeCompare(b[0]));
+  }, [filtered]);
+
   const counts = useMemo(() => {
     const c = { amarillo: 0, rosa: 0, verde: 0 };
     for (const r of riders) c[r.category]++;
@@ -239,8 +254,14 @@ export default function LombardiaRidersManager({
         ))}
       </div>
 
-      <div className="mt-4 flex flex-col gap-1.5">
-        {filtered.map((rider) => {
+      <div className="mt-4 flex flex-col gap-4">
+        {grouped.map(([teamName, teamRiders]) => (
+          <div key={teamName} className="flex flex-col gap-1.5">
+            <h3 className="font-display text-xs uppercase tracking-wide text-verde-deep">
+              {teamName}
+              <span className="ml-2 text-text-faint">{teamRiders.length}</span>
+            </h3>
+        {teamRiders.map((rider) => {
           const isEditing = editingId === rider.id;
           return (
             <div
@@ -331,6 +352,8 @@ export default function LombardiaRidersManager({
             </div>
           );
         })}
+          </div>
+        ))}
         {filtered.length === 0 && (
           <p className="text-sm text-text-soft">
             No hay corredores todavía. Añade el primero arriba.
