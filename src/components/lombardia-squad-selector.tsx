@@ -9,18 +9,21 @@ import {
   type RiderCategory,
 } from "@/lib/lombardia";
 import CountryFlag from "./country-flag";
+import IsoFlag, { countryNameEs } from "./iso-flag";
 
 export type LombardiaRider = {
   id: string;
   name: string;
   team: string | null;
+  nationality: string | null;
   category: RiderCategory;
 };
 
-const CATEGORIES: RiderCategory[] = ["amarillo", "rosa", "verde"];
+const CATEGORIES: RiderCategory[] = ["amarillo", "rojo", "rosa", "verde"];
 
 const CATEGORY_STYLES: Record<RiderCategory, string> = {
   amarillo: "bg-amarillo text-on-accent",
+  rojo: "bg-rojo text-on-accent",
   rosa: "bg-rosa text-on-accent",
   verde: "bg-verde text-on-accent",
 };
@@ -66,6 +69,7 @@ export default function LombardiaSquadSelector({
     total === SQUAD_SIZE &&
     teamName.trim().length > 0 &&
     counts.amarillo === SQUAD_REQUIREMENTS.amarillo &&
+    counts.rojo === SQUAD_REQUIREMENTS.rojo &&
     counts.rosa === SQUAD_REQUIREMENTS.rosa &&
     counts.verde === SQUAD_REQUIREMENTS.verde;
 
@@ -76,10 +80,10 @@ export default function LombardiaSquadSelector({
     const byCountry = new Map<string, LombardiaRider[]>();
     for (const r of riders) {
       if (categoryFilter !== "all" && r.category !== categoryFilter) continue;
-      if (q && !r.name.toLowerCase().includes(q) && !(r.team ?? "").toLowerCase().includes(q)) {
+      if (q && !r.name.toLowerCase().includes(q) && !(r.team ?? "").toLowerCase().includes(q) && !(countryNameEs(r.nationality) ?? "").toLowerCase().includes(q)) {
         continue;
       }
-      const key = r.team ?? "Sin país";
+      const key = r.team ?? "Sin equipo";
       if (!byCountry.has(key)) byCountry.set(key, []);
       byCountry.get(key)!.push(r);
     }
@@ -188,7 +192,7 @@ export default function LombardiaSquadSelector({
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Buscar corredor o país…"
+            placeholder="Buscar corredor o equipo…"
             className="w-full rounded-full border border-line bg-surface px-4 py-2.5 text-base outline-none focus:border-verde"
           />
         </div>
@@ -252,7 +256,15 @@ export default function LombardiaSquadSelector({
                         : "border-line bg-surface hover:border-verde-deep/50"
                     }`}
                   >
-                    <span className="min-w-0 flex-1 truncate text-base">{rider.name}</span>
+                    <span className="min-w-0 flex-1 truncate">
+                      <IsoFlag iso={rider.nationality} className="mr-1.5" />
+                      <span className="text-base">{rider.name}</span>
+                      {countryNameEs(rider.nationality) && (
+                        <span className="ml-2 text-xs text-text-soft">
+                          {countryNameEs(rider.nationality)}
+                        </span>
+                      )}
+                    </span>
                     <span
                       className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-display uppercase tracking-wide ${CATEGORY_STYLES[rider.category]}`}
                     >

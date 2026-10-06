@@ -2,7 +2,7 @@ import { sql } from "@/lib/db";
 import { getSession } from "@/lib/auth";
 import { getUserTeams } from "@/lib/teams";
 import { getLombardiaEvent, isPicksLocked, pointsForPosition } from "@/lib/lombardia";
-import CountryFlag from "@/components/country-flag";
+import IsoFlag from "@/components/iso-flag";
 
 type SquadRow = {
   team_id: string;
@@ -14,6 +14,7 @@ type PickRow = {
   team_id: string;
   rider_name: string;
   team: string | null;
+  nationality: string | null;
   multiplier: string;
   position: number | null;
 };
@@ -51,6 +52,7 @@ export default async function LombardiaClasificacionPage() {
       p.team_id,
       r.name as rider_name,
       r.team,
+      r.nationality,
       r.multiplier,
       res.position
     from special_event_picks p
@@ -117,15 +119,15 @@ export default async function LombardiaClasificacionPage() {
                   <div className="text-[11px] text-text-soft">{s.displayName}</div>
                 </div>
                 <span className="shrink-0 font-display text-lg text-amarillo">
-                  {s.total.toFixed(1)}
+                  {Number(s.total.toFixed(2))}
                 </span>
               </div>
               {revealed ? (
                 <div className="mt-2 flex flex-wrap gap-1.5 text-xs text-text-soft">
                   {s.picks.map((p, j) => (
                     <span key={j} className="rounded-full border border-line px-2.5 py-1">
-                      <CountryFlag team={p.team} className="mr-1" />
-                      {p.rider_name} · {(pointsForPosition(p.position) * Number(p.multiplier)).toFixed(1)}
+                      <IsoFlag iso={p.nationality} className="mr-1" />
+                      {p.rider_name} · {Number((pointsForPosition(p.position) * Number(p.multiplier)).toFixed(2))}
                     </span>
                   ))}
                 </div>

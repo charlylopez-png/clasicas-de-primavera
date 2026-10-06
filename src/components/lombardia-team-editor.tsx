@@ -8,19 +8,21 @@ import {
   squadCounts,
   type RiderCategory,
 } from "@/lib/lombardia";
-import CountryFlag from "./country-flag";
+import IsoFlag, { countryNameEs } from "./iso-flag";
 
 export type LombardiaRider = {
   id: string;
   name: string;
   team: string | null;
+  nationality: string | null;
   category: RiderCategory;
 };
 
-const CATEGORIES: RiderCategory[] = ["amarillo", "rosa", "verde"];
+const CATEGORIES: RiderCategory[] = ["amarillo", "rojo", "rosa", "verde"];
 
 const CATEGORY_STYLES: Record<RiderCategory, string> = {
   amarillo: "bg-amarillo text-on-accent",
+  rojo: "bg-rojo text-on-accent",
   rosa: "bg-rosa text-on-accent",
   verde: "bg-verde text-on-accent",
 };
@@ -63,6 +65,7 @@ export default function LombardiaTeamEditor({
   const byCategory = useMemo(() => {
     const groups: Record<RiderCategory, LombardiaRider[]> = {
       amarillo: [],
+      rojo: [],
       rosa: [],
       verde: [],
     };
@@ -81,6 +84,7 @@ export default function LombardiaTeamEditor({
   const total = selected.size;
   const isValid =
     counts.amarillo === SQUAD_REQUIREMENTS.amarillo &&
+    counts.rojo === SQUAD_REQUIREMENTS.rojo &&
     counts.rosa === SQUAD_REQUIREMENTS.rosa &&
     counts.verde === SQUAD_REQUIREMENTS.verde;
   const canSave = !locked && total === SQUAD_SIZE && teamName.trim().length > 0 && isValid;
@@ -92,6 +96,7 @@ export default function LombardiaTeamEditor({
     const c = squadCounts(cats);
     return (
       c.amarillo !== SQUAD_REQUIREMENTS.amarillo ||
+      c.rojo !== SQUAD_REQUIREMENTS.rojo ||
       c.rosa !== SQUAD_REQUIREMENTS.rosa ||
       c.verde !== SQUAD_REQUIREMENTS.verde
     );
@@ -141,7 +146,7 @@ export default function LombardiaTeamEditor({
     <div>
       {wasInitiallyInvalid && (
         <div className="mb-4 rounded-xl border border-rosa/50 bg-rosa/10 px-3.5 py-2.5 text-xs text-rosa">
-          Este equipo ya no cumple 1 Amarillo + 2 Rosas + 3 Verdes — seguramente
+          Este equipo ya no cumple 1 Amarillo + 1 Rojo + 2 Rosas + 3 Verdes — seguramente
           porque un corredor que tenías fichado cambió de color después. Ajusta
           los bloques de abajo y pulsa Guardar.
         </div>
@@ -172,7 +177,11 @@ export default function LombardiaTeamEditor({
           const filteredAvailable = available.filter((r) => {
             const q = query.trim().toLowerCase();
             if (!q) return true;
-            return r.name.toLowerCase().includes(q) || (r.team ?? "").toLowerCase().includes(q);
+            return (
+              r.name.toLowerCase().includes(q) ||
+              (r.team ?? "").toLowerCase().includes(q) ||
+              (countryNameEs(r.nationality) ?? "").toLowerCase().includes(q)
+            );
           });
 
           return (
@@ -206,10 +215,14 @@ export default function LombardiaTeamEditor({
                     className="flex items-center justify-between gap-3 rounded-xl border border-line bg-[var(--bg)] px-3.5 py-2.5"
                   >
                     <span className="min-w-0 flex-1 truncate">
-                      <CountryFlag team={rider.team} className="mr-1.5" />
+                      <IsoFlag iso={rider.nationality} className="mr-1.5" />
                       <span className="truncate text-base">{rider.name}</span>
-                      {rider.team && (
-                        <span className="ml-2 text-xs text-text-soft">{rider.team}</span>
+                      {(countryNameEs(rider.nationality) || rider.team) && (
+                        <span className="ml-2 text-xs text-text-soft">
+                          {[countryNameEs(rider.nationality), rider.team]
+                            .filter(Boolean)
+                            .join(" · ")}
+                        </span>
                       )}
                     </span>
                     {!locked && (
@@ -236,7 +249,7 @@ export default function LombardiaTeamEditor({
                     autoFocus
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
-                    placeholder={`Buscar corredor o país ${CATEGORY_LABEL[cat].toLowerCase()}…`}
+                    placeholder={`Buscar corredor o equipo ${CATEGORY_LABEL[cat].toLowerCase()}…`}
                     className="w-full rounded-full border border-line bg-surface px-3.5 py-2 text-sm outline-none focus:border-verde"
                   />
                   <div className="mt-2 flex max-h-52 flex-col gap-1 overflow-y-auto">
@@ -247,10 +260,14 @@ export default function LombardiaTeamEditor({
                         onClick={() => add(rider.id)}
                         className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-left text-sm hover:bg-surface-2"
                       >
-                        <CountryFlag team={rider.team} />
+                        <IsoFlag iso={rider.nationality} />
                         <span className="truncate">{rider.name}</span>
-                        {rider.team && (
-                          <span className="ml-auto shrink-0 text-xs text-text-soft">{rider.team}</span>
+                        {(countryNameEs(rider.nationality) || rider.team) && (
+                          <span className="ml-auto shrink-0 text-xs text-text-soft">
+                            {[countryNameEs(rider.nationality), rider.team]
+                              .filter(Boolean)
+                              .join(" · ")}
+                          </span>
                         )}
                       </button>
                     ))}

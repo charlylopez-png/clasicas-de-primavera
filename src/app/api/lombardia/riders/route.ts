@@ -31,7 +31,7 @@ export async function POST(request: Request) {
     insert into special_event_riders (event_id, name, team, category, multiplier)
     values (${eventId}, ${parsed.data.name}, ${parsed.data.team ?? null}, 'verde', ${CATEGORY_MULTIPLIER.verde})
     on conflict (event_id, name) do update set team = excluded.team
-    returning id, name, team, category, multiplier
+    returning id, name, team, nationality, category, multiplier
   `;
 
   return NextResponse.json({ ok: true, rider: rows[0] });

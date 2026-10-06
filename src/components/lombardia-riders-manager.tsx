@@ -2,20 +2,22 @@
 
 import { useMemo, useState, useTransition } from "react";
 import { CATEGORY_LABEL, type RiderCategory } from "@/lib/lombardia";
-import CountryFlag from "./country-flag";
+import IsoFlag, { countryNameEs } from "./iso-flag";
 
 export type LombardiaAdminRider = {
   id: string;
   name: string;
   team: string | null;
+  nationality?: string | null;
   category: RiderCategory;
   multiplier: number;
 };
 
-const CATEGORIES: RiderCategory[] = ["amarillo", "rosa", "verde"];
+const CATEGORIES: RiderCategory[] = ["amarillo", "rojo", "rosa", "verde"];
 
 const CATEGORY_STYLES: Record<RiderCategory, string> = {
   amarillo: "bg-amarillo text-on-accent",
+  rojo: "bg-rojo text-on-accent",
   rosa: "bg-rosa text-on-accent",
   verde: "bg-verde text-on-accent",
 };
@@ -46,7 +48,11 @@ export default function LombardiaRidersManager({
     return riders.filter((r) => {
       if (categoryFilter !== "all" && r.category !== categoryFilter) return false;
       if (!q) return true;
-      return r.name.toLowerCase().includes(q) || (r.team ?? "").toLowerCase().includes(q);
+      return (
+        r.name.toLowerCase().includes(q) ||
+        (r.team ?? "").toLowerCase().includes(q) ||
+        (countryNameEs(r.nationality) ?? "").toLowerCase().includes(q)
+      );
     });
   }, [riders, query, categoryFilter]);
 
@@ -66,7 +72,7 @@ export default function LombardiaRidersManager({
   }, [filtered]);
 
   const counts = useMemo(() => {
-    const c = { amarillo: 0, rosa: 0, verde: 0 };
+    const c = { amarillo: 0, rojo: 0, rosa: 0, verde: 0 };
     for (const r of riders) c[r.category]++;
     return c;
   }, [riders]);
@@ -177,7 +183,7 @@ export default function LombardiaRidersManager({
           type="text"
           value={team}
           onChange={(e) => setTeam(e.target.value)}
-          placeholder="País / equipo (opcional)"
+          placeholder="Equipo (opcional)"
           className="w-full rounded-full border border-line bg-[var(--bg)] px-4 py-2.5 text-base outline-none focus:border-verde sm:max-w-[220px]"
         />
         <button
@@ -210,7 +216,7 @@ export default function LombardiaRidersManager({
         </a>
       </div>
       <p className="mt-1.5 text-[11px] text-text-faint">
-        El CSV trae país y categoría de cada corredor; en Excel/Sheets puedes
+        El CSV trae equipo y categoría de cada corredor; en Excel/Sheets puedes
         reordenarlo por la columna que quieras.
       </p>
 
@@ -218,7 +224,7 @@ export default function LombardiaRidersManager({
         type="search"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        placeholder="Buscar corredor o país…"
+        placeholder="Buscar corredor o equipo…"
         className="mt-4 w-full rounded-full border border-line bg-surface px-4 py-2.5 text-base outline-none focus:border-verde"
       />
 
@@ -282,7 +288,7 @@ export default function LombardiaRidersManager({
                       type="text"
                       value={editTeam}
                       onChange={(e) => setEditTeam(e.target.value)}
-                      placeholder="País / equipo"
+                      placeholder="Equipo"
                       className="w-full rounded-full border border-line bg-[var(--bg)] px-3.5 py-2 text-sm outline-none focus:border-verde sm:max-w-[220px]"
                     />
                   </div>
@@ -308,10 +314,12 @@ export default function LombardiaRidersManager({
               ) : (
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <span className="min-w-0 flex-1 truncate">
-                    <CountryFlag team={rider.team} className="mr-1.5" />
+                    <IsoFlag iso={rider.nationality} className="mr-1.5" />
                     <span className="truncate text-base">{rider.name}</span>
-                    {rider.team && (
-                      <span className="ml-2 text-xs text-text-soft">{rider.team}</span>
+                    {countryNameEs(rider.nationality) && (
+                      <span className="ml-2 text-xs text-text-soft">
+                        {countryNameEs(rider.nationality)}
+                      </span>
                     )}
                   </span>
                   <div className="flex w-full flex-wrap items-center justify-end gap-2 sm:w-auto sm:shrink-0">
@@ -333,7 +341,7 @@ export default function LombardiaRidersManager({
                     <button
                       type="button"
                       onClick={() => startEdit(rider)}
-                      title="Editar nombre/país"
+                      title="Editar nombre/equipo"
                       className="ml-1 h-9 w-9 rounded-full border border-line text-text-soft hover:border-verde-deep hover:text-verde-deep"
                     >
                       ✎

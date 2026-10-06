@@ -24,7 +24,7 @@ export default async function LombardiaEleccionPage() {
   const { teams, activeTeam } = await getActiveTeam(session.userId);
 
   const riders = (await sql`
-    select id, name, team, category
+    select id, name, team, nationality, category
     from special_event_riders
     where event_id = ${event.id}
     order by team, name
@@ -39,8 +39,8 @@ export default async function LombardiaEleccionPage() {
     <section>
       <h2 className="font-display text-sm text-verde-deep">Elección de equipo</h2>
       <p className="mt-1 text-sm text-text-soft">
-        Ponle un nombre a tu equipo y elige 6 corredores de la lista cerrada: 1
-        Amarillo, 2 Rosas y 3 Verdes. Puedes cambiarlo cuantas veces quieras
+        Ponle un nombre a tu equipo y elige 7 corredores de la lista cerrada: 1
+        Amarillo, 1 Rojo, 2 Rosas y 3 Verdes. Puedes cambiarlo cuantas veces quieras
         hasta la fecha límite.
       </p>
 

@@ -36,7 +36,7 @@ export default function LombardiaHomeBanner() {
             Il Lombardia 2026
           </div>
           <p className="mt-0.5 text-xs text-text-soft sm:text-sm">
-            Elige tus 6 corredores antes del cierre →
+            Elige tus 7 corredores antes del cierre →
           </p>
         </div>
         <span className="hidden shrink-0 rounded-full bg-amarillo px-4 py-2 font-display text-xs uppercase tracking-wide text-on-accent group-hover:bg-gold sm:inline-block">

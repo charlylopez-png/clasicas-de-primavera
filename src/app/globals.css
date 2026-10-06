@@ -27,6 +27,7 @@
   --accent-amarillo: #e9c03a; /* ukt-yellow-400: acción principal */
   --accent-gold: #c8901a; /* ukt-gold-500: hover del botón principal */
   --accent-rosa: #f58fb0; /* ukt-pink-400: solo categoría / coeficiente */
+  --accent-rojo: #ff6b60; /* categoría Rojo (solo Il Lombardia), coeficiente 1,25 */
   --on-accent: #123c2b; /* texto sobre cualquier acento sólido (nunca blanco) */
 
   /* --- Cabecera / hero con textura de adoquinado --- */
@@ -51,6 +52,7 @@
   --color-amarillo: var(--accent-amarillo);
   --color-gold: var(--accent-gold);
   --color-rosa: var(--accent-rosa);
+  --color-rojo: var(--accent-rojo);
   --color-on-accent: var(--on-accent);
   --font-display: var(--font-oswald);
   --font-body: var(--font-nunito);

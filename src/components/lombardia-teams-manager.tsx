@@ -2,14 +2,14 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
-import CountryFlag from "@/components/country-flag";
+import IsoFlag from "@/components/iso-flag";
 
 export type LombardiaTeamRow = {
   teamId: string;
   displayName: string;
   teamName: string;
   total: number;
-  picks: { riderName: string; team: string | null; points: number }[];
+  picks: { riderName: string; nationality: string | null; points: number }[];
 };
 
 // Solo para el admin: lista cada equipo fichado para Il Lombardia (uno por
@@ -24,7 +24,7 @@ export default function LombardiaTeamsManager({ teams }: { teams: LombardiaTeamR
 
   function removeTeam(teamId: string, teamName: string, displayName: string) {
     const ok = window.confirm(
-      `¿Quitar el equipo "${teamName}" de ${displayName} de Il Lombardia? Se borran sus 6 corredores fichados para esta prueba. Si ese equipo no se usa también en las clásicas o en otra prueba especial, desaparecerá del todo de su selector de equipos. Esto no toca sus equipos de las clásicas.`
+      `¿Quitar el equipo "${teamName}" de ${displayName} de Il Lombardia? Se borran sus 7 corredores fichados para esta prueba. Si ese equipo no se usa también en las clásicas o en otra prueba especial, desaparecerá del todo de su selector de equipos. Esto no toca sus equipos de las clásicas.`
     );
     if (!ok) return;
     setError(null);
@@ -61,7 +61,7 @@ export default function LombardiaTeamsManager({ teams }: { teams: LombardiaTeamR
             </div>
             <div className="flex w-full flex-wrap items-center justify-end gap-2 sm:w-auto sm:shrink-0">
               <span className="shrink-0 font-display text-base text-amarillo">
-                {t.total.toFixed(1)}
+                {Number(t.total.toFixed(2))}
               </span>
               <button
                 type="button"
@@ -76,8 +76,8 @@ export default function LombardiaTeamsManager({ teams }: { teams: LombardiaTeamR
           <div className="mt-2 flex flex-wrap gap-1.5 text-xs text-text-soft">
             {t.picks.map((p, j) => (
               <span key={j} className="rounded-full border border-line px-2.5 py-1">
-                <CountryFlag team={p.team} className="mr-1" />
-                {p.riderName} · {p.points.toFixed(1)}
+                <IsoFlag iso={p.nationality} className="mr-1" />
+                {p.riderName} · {Number(p.points.toFixed(2))}
               </span>
             ))}
           </div>

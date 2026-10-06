@@ -16,7 +16,7 @@ export default async function LombardiaCorredoresPage() {
 
   const riders = eventId
     ? ((await sql`
-        select id, name, team, category, multiplier
+        select id, name, team, nationality, category, multiplier
         from special_event_riders
         where event_id = ${eventId}
         order by name
@@ -28,7 +28,7 @@ export default async function LombardiaCorredoresPage() {
       <h2 className="font-display text-sm text-verde-deep">Lista cerrada de corredores</h2>
       <p className="mt-1 max-w-prose text-sm text-text-soft">
         Añade aquí a los corredores convocados para Il Lombardia y clasifícalos
-        en Amarillo, Rosa o Verde. Por defecto entran en Verde. Esta lista es
+        en Amarillo, Rojo, Rosa o Verde. Por defecto entran en Verde. Esta lista es
         propia de Il Lombardia: no toca la base de datos de las clásicas ni la
         del Mundial.
       </p>

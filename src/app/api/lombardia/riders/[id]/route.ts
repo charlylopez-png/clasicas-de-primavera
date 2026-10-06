@@ -10,7 +10,7 @@ import { CATEGORY_MULTIPLIER, type RiderCategory } from "@/lib/lombardia";
 const PatchSchema = z.object({
   name: z.string().trim().min(1).max(120).optional(),
   team: z.string().trim().max(120).nullable().optional(),
-  category: z.enum(["amarillo", "rosa", "verde"]).optional(),
+  category: z.enum(["amarillo", "rojo", "rosa", "verde"]).optional(),
 });
 
 export async function PATCH(

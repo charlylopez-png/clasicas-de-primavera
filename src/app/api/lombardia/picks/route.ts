@@ -66,7 +66,7 @@ export async function POST(request: Request) {
 
   if (!isValidSquad(rows.map((r) => r.category))) {
     return NextResponse.json(
-      { error: "El equipo debe ser 1 Amarillo + 2 Rosas + 3 Verdes." },
+      { error: "El equipo debe ser 1 Amarillo + 1 Rojo + 2 Rosas + 3 Verdes." },
       { status: 400 }
     );
   }

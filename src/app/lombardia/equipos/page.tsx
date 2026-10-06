@@ -14,6 +14,7 @@ type PickRow = {
   team_id: string;
   rider_name: string;
   team: string | null;
+  nationality: string | null;
   multiplier: string;
   position: number | null;
 };
@@ -49,6 +50,7 @@ export default async function LombardiaEquiposPage() {
       p.team_id,
       r.name as rider_name,
       r.team,
+      r.nationality,
       r.multiplier,
       res.position
     from special_event_picks p
@@ -78,7 +80,7 @@ export default async function LombardiaEquiposPage() {
         total,
         picks: picks.map((p) => ({
           riderName: p.rider_name,
-          team: p.team,
+          nationality: p.nationality,
           points: pointsForPosition(p.position) * Number(p.multiplier),
         })),
       };

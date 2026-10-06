@@ -6,10 +6,11 @@ import {
   CATEGORY_LABEL,
   type RiderCategory,
 } from "@/lib/lombardia";
-import CountryFlag from "@/components/country-flag";
+import IsoFlag from "@/components/iso-flag";
 
 const CATEGORY_STYLES: Record<RiderCategory, string> = {
   amarillo: "bg-amarillo text-on-accent",
+  rojo: "bg-rojo text-on-accent",
   rosa: "bg-rosa text-on-accent",
   verde: "bg-verde text-on-accent",
 };
@@ -17,6 +18,7 @@ const CATEGORY_STYLES: Record<RiderCategory, string> = {
 type RiderResultRow = {
   name: string;
   team: string | null;
+  nationality: string | null;
   category: RiderCategory;
   multiplier: string;
   position: number;
@@ -40,7 +42,7 @@ export default async function LombardiaDataPage() {
   }
 
   const rows = (await sql`
-    select r.name, r.team, r.category, r.multiplier, res.position
+    select r.name, r.team, r.nationality, r.category, r.multiplier, res.position
     from special_event_results res
     join special_event_riders r on r.id = res.rider_id
     where res.event_id = ${event.id}
@@ -75,7 +77,7 @@ export default async function LombardiaDataPage() {
               <span className="shrink-0 font-display text-sm text-text-soft">
                 {i + 1}.
               </span>
-              <CountryFlag team={r.team} />
+              <IsoFlag iso={r.nationality} />
               <span className="truncate text-base">{r.name}</span>
             </div>
             <div className="flex w-full flex-wrap items-center justify-end gap-2 sm:w-auto sm:shrink-0">
@@ -88,7 +90,7 @@ export default async function LombardiaDataPage() {
                 {CATEGORY_LABEL[r.category]} · {formatMultiplier(r.multiplier)}
               </span>
               <span className="shrink-0 font-display text-base text-amarillo">
-                {r.total.toFixed(1)} pts
+                {Number(r.total.toFixed(2))} pts
               </span>
             </div>
           </div>

@@ -2,9 +2,10 @@ import { NextResponse } from "next/server";
 import { sql } from "@/lib/db";
 import { getSession } from "@/lib/auth";
 import { CATEGORY_LABEL, LOMBARDIA_SLUG, type RiderCategory } from "@/lib/lombardia";
+import { countryNameEs } from "@/components/iso-flag";
 
-// Orden de categoría en el CSV (no alfabético): Amarillo, Rosa, Verde.
-const CATEGORY_ORDER: RiderCategory[] = ["amarillo", "rosa", "verde"];
+// Orden de categoría en el CSV (no alfabético): Amarillo, Rojo, Rosa, Verde.
+const CATEGORY_ORDER: RiderCategory[] = ["amarillo", "rojo", "rosa", "verde"];
 
 function csvEscape(value: string): string {
   if (/[";\n]/.test(value)) {
@@ -26,10 +27,15 @@ export async function GET() {
   }
 
   const rows = (await sql`
-    select name, team, category
+    select name, team, nationality, category
     from special_event_riders
     where event_id = ${eventId}
-  `) as { name: string; team: string | null; category: RiderCategory }[];
+  `) as {
+    name: string;
+    team: string | null;
+    nationality: string | null;
+    category: RiderCategory;
+  }[];
 
   // Agrupado primero por categoría y, dentro, por país — así se ve de un
   // vistazo cada bloque de color; en Excel se puede reordenar por la
@@ -42,10 +48,10 @@ export async function GET() {
     return a.name.localeCompare(b.name, "es");
   });
 
-  const lines = [["Categoría", "País", "Corredor"].join(";")];
+  const lines = [["Categoría", "Equipo", "Corredor", "Nacionalidad"].join(";")];
   for (const r of rows) {
     lines.push(
-      [csvEscape(CATEGORY_LABEL[r.category]), csvEscape(r.team ?? ""), csvEscape(r.name)].join(";")
+      [csvEscape(CATEGORY_LABEL[r.category]), csvEscape(r.team ?? ""), csvEscape(r.name), csvEscape(countryNameEs(r.nationality) ?? "")].join(";")
     );
   }
   // BOM para que Excel detecte UTF-8 y no rompa los acentos/ñ; ";" como

@@ -31,7 +31,7 @@ export default async function LombardiaEquipoPage() {
   const { teams, activeTeam } = await getActiveTeam(session.userId);
 
   const riders = (await sql`
-    select id, name, team, category
+    select id, name, team, nationality, category
     from special_event_riders
     where event_id = ${event.id}
     order by team, name
@@ -72,7 +72,7 @@ export default async function LombardiaEquipoPage() {
           <div className="flex items-center justify-between gap-3">
             <p className="text-xs text-text-soft">{session.displayName}</p>
             <span className="font-display text-lg text-amarillo">
-              {total.toFixed(1)} pts
+              {Number(total.toFixed(2))} pts
             </span>
           </div>
 
